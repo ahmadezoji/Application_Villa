@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10mm"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:background="@color/secondaryLightColor"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <EditText
+            android:textSize="4mm"
+            android:textAlignment="center"
+            android:id="@+id/m_usernameSignUP"
+            android:hint="Username"
+            android:padding="3mm"
+            android:layout_margin="1mm"
+            android:background="@color/secondaryColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:textSize="4mm"
+            android:textAlignment="center"
+            android:id="@+id/m_passwordSignUP"
+            android:hint="Password"
+            android:padding="3mm"
+            android:layout_margin="1mm"
+            android:background="@color/secondaryColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:textSize="4mm"
+            android:textAlignment="center"
+            android:id="@+id/m_phonSignUP"
+            android:hint="Mobile"
+            android:padding="3mm"
+            android:layout_margin="1mm"
+            android:background="@color/secondaryColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <Button
+        android:onClick="onclick_btnSignup"
+        android:layout_margin="1mm"
+        android:id="@+id/SignupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="4mm"
+        android:padding="5mm"
+        android:text="Sign Up"
+        android:background="@color/primaryLightColor"
+        android:textColor="@color/secondaryTextColor" />
+
+</LinearLayout>

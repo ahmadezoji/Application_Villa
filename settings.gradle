@@ -1,0 +1,1 @@
+include ':app', ':ormlite-android-5.1', ':ormlite-core-5.1', ':ormlite-jdbc-5.1', ':okhttp-2.5.0', ':okio-1.14.1'
