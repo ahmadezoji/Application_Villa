@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -53,7 +54,8 @@ public class VillaAdapterCustomer extends ArrayAdapter {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DeleteDialog deleteDialog = new DeleteDialog();
+                        Intent intent = new Intent(context, ReservationActivity.class);
+                        context.startActivity(intent);
                     }
                 });
 
