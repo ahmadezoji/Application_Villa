@@ -34,8 +34,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                 .setText(CurrentUser.getUsername());
 
 
-//        this.filllist();
-        new GetVillasTask().execute(CurrentUser.getUserId());
+        this.filllist();
     }
 
     public class GetVillasTask extends AsyncTask<Integer,Object, List<Villa>>
@@ -93,16 +92,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
     @Override
     public void filllist() {
-        try {
-            List<Villa> villas=new ArrayList<>();
-            villas=new DatabaseHelper(this).getVilla_Admin(CurrentUser.getUserId());
-            ((ListView)(findViewById(R.id.m_List_Admin)))
-                    .setAdapter(new VillaAdapterAdmin(this,villas));
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
-        }
+        new GetVillasTask().execute(CurrentUser.getUserId());
     }
 
     public void Onclick_BtnAdd(View view)
