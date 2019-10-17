@@ -6,31 +6,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:padding="10mm"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:padding="10mm">
 
         <EditText
+            android:textColor="#000"
+            android:layout_margin="1mm"
+            android:padding="1mm"
             android:textAlignment="center"
             android:id="@+id/m_name"
             android:hint="username"
-            android:padding="3mm"
-            android:layout_margin="1mm"
-            android:background="#15A5E6"
-            android:layout_weight="0.5"
-            android:layout_width="0mm"
+            android:background="@color/primaryColor"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
+            android:textColor="#000"
+            android:layout_margin="1mm"
+            android:padding="1mm"
             android:textAlignment="center"
             android:id="@+id/m_pass"
             android:hint="pass"
-            android:padding="3mm"
-            android:layout_margin="1mm"
-            android:background="#15A5E6"
-            android:layout_weight="0.5"
-            android:layout_width="0mm"
+            android:background="@color/primaryColor"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -56,6 +56,8 @@
             android:layout_height="wrap_content"
             android:text="Sign Up"
             android:textColor="#F00C0C" />
+
+
 
     </LinearLayout>
 

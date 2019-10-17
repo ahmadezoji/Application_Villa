@@ -1,14 +1,25 @@
 package com.absent.villaapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ListView;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.cardviewtest.CustomeAdapter;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -16,14 +27,44 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivityCustomer extends AppCompatActivity implements VillaListOwner{
+public class MainActivityCustomer extends AppCompatActivity implements VillaListOwner {
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+    private static ArrayList<Villa> data;
+    static View.OnClickListener myOnClickListener;
+    private static ArrayList<Integer> removedItems;
+
+    private GoogleMap mMap;
+
+
+
     public Users CurrentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_customer);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+
+
+                // Add a marker in Sydney and move the camera
+                LatLng sydney = new LatLng(-34, 151);
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")).setVisible(true);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+            }
+        });
+
 
         Intent intent=getIntent();
         Bundle bundle=intent.getExtras();
@@ -36,67 +77,93 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
     @Override
     public void filllist() {
-        try {
-            List<Villa> villas=new ArrayList<>();
-            villas=new DatabaseHelper(this).getVilla_Customer();
-            ((ListView)(findViewById(R.id.m_List_Customer)))
-                    .setAdapter(new VillaAdapterCustomer(this,villas));
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
-        }
+
+        new GetVillasTaskCustomer().execute();
     }
 
-    public class GetVillasTask extends AsyncTask<Integer,Object, List<Villa>>
-    {
+    public class GetVillasTaskCustomer extends AsyncTask<Object,Object,ArrayList<Villa>>{
         @Override
-        protected List<Villa> doInBackground(Integer... integers) {
+        protected ArrayList<Villa> doInBackground(Object... objects) {
             try {
+                ArrayList<Villa>villas=new ArrayList<>();
 
-                List<Villa> villas=new ArrayList<>();
-                String strApi = new OkHttpClient().newCall(
+                String api=
+                new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url("http://84.241.1.59:9191/ServiceVilla/getvillas")
-                                .build()
+                                .url("http://84.241.1.59:9191/villas/all")
+                        .build()
                 )
                         .execute()
                         .body()
                         .string();
+
                 /*Call back Fill list IF SUCCESS*/
-                JSONArray jsonArray=new JSONArray(strApi);
+                JSONArray jsonArray=new JSONArray(api);
                 for (int i=0;i<jsonArray.length();i++) {
                     Villa villa=new Villa();
                     JSONObject jsonObject =jsonArray.getJSONObject(i);
                     villa.setVillaId(jsonObject.getInt("id"));
+                    villa.setTitle(jsonObject.getString("title"));
                     villa.setRoomCount(jsonObject.getInt("roomcnt"));
                     villa.setCapacity(jsonObject.getInt("capacity"));
-                    villa.setArea(jsonObject.getInt("area"));
+                    villa.setLat(jsonObject.getInt("lat"));
+                    villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic((jsonObject.getString("coverpic")).getBytes());
+                    villa.setPic((jsonObject.getString("cover")).getBytes());
                     villa.setCost(jsonObject.getInt("cost"));
-                    villa.setAdminUserId(jsonObject.getInt("ownerId"));
+                    villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);
 
                 }
 
+
                 return villas;
-            }
-            catch (Exception e) {
+             }
+            catch (Exception e)
+            {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(List<Villa> villas) {
-            if (villas!=null) {
-                ((ListView)(findViewById(R.id.m_List_Admin)))
-                        .setAdapter(new VillaAdapterAdmin(MainActivityCustomer.this,villas));
-            }
-            else {
-                Toast.makeText(MainActivityCustomer.this, "ثبت نام ناموفق بود  !!", Toast.LENGTH_LONG).show();
-            }
+        protected void onPostExecute(ArrayList<Villa> villas) {
+            if (villas!=null)
+            {
+//                ((ListView)(findViewById(R.id.m_list2)))
+//                        .setAdapter(new VillaAdapterCustomer(MainActivityCustomer.this,villas));
 
+
+                ArrayList<LatLng> latLngs=new ArrayList<>();
+                for (int i=0;i<villas.size();i++)
+                {
+                    LatLng VillaLoc = new LatLng(villas.get(i).getLat(),villas.get(i).getLon());
+
+                    MarkerOptions mo = new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())).visible(true);
+                    Marker marker = mMap.addMarker(mo);
+                    mo.anchor(0f, 0.5f);
+                    marker.showInfoWindow();
+
+
+//                    mMap.addMarker(new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(VillaLoc));
+                }
+
+
+                recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+                recyclerView.setHasFixedSize(true);
+
+                /*Recycle view set adapter*///show Villas
+                layoutManager = new LinearLayoutManager(MainActivityCustomer.this);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                adapter = new CustomeAdapter(villas);
+                recyclerView.setAdapter(adapter);
+
+            }
+            else
+            {
+                Toast.makeText(MainActivityCustomer.this,"ناموجود ",Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

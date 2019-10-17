@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.types.ByteArrayType;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
@@ -15,6 +14,8 @@ public class Villa implements Serializable {
     public static final String ADMINUSER_ID = "AdminUserId";
     @DatabaseField(generatedId = true)
     private int villaId;
+    @DatabaseField
+    String title;
     @DatabaseField
     private int roomCount;
     @DatabaseField
@@ -29,12 +30,12 @@ public class Villa implements Serializable {
     private int Cost;
     @DatabaseField
     private int AdminUserId;
+    @DatabaseField
+    float lat;
+    @DatabaseField
+    float lon;
 
-   // @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-   // private int  userId;
 
-//    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-//    public Users users;
 
 
     public Villa()
@@ -72,6 +73,30 @@ public class Villa implements Serializable {
 
     public void setCost(int cost) {
         Cost = cost;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
+    }
+
+    public float getLat() {
+        return lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public int getArea() {

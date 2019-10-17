@@ -1,13 +1,13 @@
 package com.absent.villaapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -18,15 +18,27 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserLoginActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class UserLoginActivity extends AppCompatActivity {
+    private APIs jsonAPI ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new DatabaseHelper(this).getReadableDatabase();
+//        new DatabaseHelper(this).getReadableDatabase();
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://84.241.1.59:9191/users/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        jsonAPI = retrofit.create(APIs.class);
 
+        getusers();
     }
 
     public class GetApi extends AsyncTask<String,Object,List<Users>>
@@ -37,9 +49,10 @@ public class UserLoginActivity extends AppCompatActivity {
                 List<Users> users=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url("http://84.241.1.59:9191/ServiceVilla/searchuser" +
-                                        "?uname=" + strings[0] + "&upass=" + strings[1] + "")
+                                .url("http://84.241.1.59:9191/users/find" +
+                                        "?username=" + strings[0] + "&password=" + strings[1] + "")
                                 .build()
+
                 )
                         .execute()
                         .body()
@@ -52,7 +65,7 @@ public class UserLoginActivity extends AppCompatActivity {
                 users1.setUserId(jsonObject.getInt("id"));
                 users1.setUsername(jsonObject.getString("username"));
                 users1.setPassword(jsonObject.getString("password"));
-                users1.setPhoneNumber(jsonObject.getString("phoneNumber"));
+                users1.setPhoneNumber(jsonObject.getString("phone"));
                 users1.setType(jsonObject.getInt("type"));
 
                 users.add(users1);
@@ -100,5 +113,26 @@ public class UserLoginActivity extends AppCompatActivity {
 
        new GetApi().execute(new String[]{uname.getText().toString(),upass.getText().toString()});
 
+
+
+    }
+
+    private void getusers(){
+        Call<List<Users>> call = jsonAPI.getusers();
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+                if (response.isSuccessful())
+                {
+                    List<Users> users=new ArrayList<>();
+                    users=response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+
+            }
+        });
     }
 }

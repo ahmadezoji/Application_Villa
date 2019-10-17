@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.absent.villaapp"
-        minSdkVersion 19
+        applicationId "com.example.testbuild"
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -30,5 +31,12 @@ dependencies {
     implementation project(':ormlite-jdbc-5.1')
     implementation project(':okhttp-2.5.0')
     implementation project(':okio-1.14.1')
+
+    implementation 'com.android.support:cardview-v7:29.0.0'
+    implementation 'com.android.support:recyclerview-v7:29.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
 }

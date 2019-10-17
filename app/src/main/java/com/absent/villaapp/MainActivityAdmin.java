@@ -1,14 +1,16 @@
 package com.absent.villaapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -17,9 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivityAdmin extends AppCompatActivity implements VillaListOwner{
+
+    private static RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
 
     public Users CurrentUser;
     @Override
@@ -37,17 +41,17 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
         this.filllist();
     }
 
-    public class GetVillasTask extends AsyncTask<Integer,Object, List<Villa>>
+    public class GetVillasTask extends AsyncTask<Integer,Object, ArrayList<Villa>>
     {
         @Override
-        protected List<Villa> doInBackground(Integer... integers) {
+        protected ArrayList<Villa> doInBackground(Integer... integers) {
             try {
 
-                List<Villa> villas=new ArrayList<>();
+                ArrayList<Villa> villas=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url("http://84.241.1.59:9191/ServiceVilla/" +
-                                        "searchvilla_byowner?ownerid="+integers[0]+"")
+                                .url("http://84.241.1.59:9191/villas/provider?" +
+                                        "PID="+integers[0]+"")
                                 .build()
                 )
                         .execute()
@@ -59,13 +63,15 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                     Villa villa=new Villa();
                     JSONObject jsonObject =jsonArray.getJSONObject(i);
                     villa.setVillaId(jsonObject.getInt("id"));
+                    villa.setTitle(jsonObject.getString("title"));
                     villa.setRoomCount(jsonObject.getInt("roomcnt"));
                     villa.setCapacity(jsonObject.getInt("capacity"));
-                    villa.setArea(jsonObject.getInt("area"));
+                    villa.setLat(jsonObject.getInt("lat"));
+                    villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic((jsonObject.getString("coverpic")).getBytes());
+                    villa.setPic((jsonObject.getString("cover")).getBytes());
                     villa.setCost(jsonObject.getInt("cost"));
-                    villa.setAdminUserId(jsonObject.getInt("ownerId"));
+                    villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);
 
                 }
@@ -78,10 +84,20 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
         }
 
         @Override
-        protected void onPostExecute(List<Villa> villas) {
+        protected void onPostExecute(ArrayList<Villa> villas) {
             if (villas!=null) {
-                ((ListView)(findViewById(R.id.m_List_Admin)))
-                        .setAdapter(new VillaAdapterCustomer(MainActivityAdmin.this,villas));
+//                ((ListView)(findViewById(R.id.m_List_Admin)))
+//                        .setAdapter(new VillaAdapterCustomer(MainActivityAdmin.this,villas));
+
+                recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_Admin);
+                recyclerView.setHasFixedSize(true);
+
+                /*Recycle view set adapter*///show Villas
+                layoutManager = new LinearLayoutManager(MainActivityAdmin.this);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                adapter = new com.example.cardviewtest.CustomeAdapter(villas);
+                recyclerView.setAdapter(adapter);
             }
             else {
                 Toast.makeText(MainActivityAdmin.this,"ویلایی برای مشهاده موجود نیست !!", Toast.LENGTH_LONG).show();
