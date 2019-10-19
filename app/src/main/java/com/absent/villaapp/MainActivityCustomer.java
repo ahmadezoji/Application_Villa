@@ -109,7 +109,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                     villa.setLat(jsonObject.getInt("lat"));
                     villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic((jsonObject.getString("cover")).getBytes());
+                    villa.setPic(jsonObject.getString("cover").getBytes());
                     villa.setCost(jsonObject.getInt("cost"));
                     villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);

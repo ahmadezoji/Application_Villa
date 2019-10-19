@@ -20,9 +20,9 @@ public class Users implements Serializable {
     @DatabaseField(canBeNull = false)
     private String password;
     @DatabaseField
-    private  String phoneNumber;
+    private  String phone;
     @DatabaseField
-    private int Type;
+    private int type;
 
 
     public Users()
@@ -39,7 +39,7 @@ public class Users implements Serializable {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phone = phoneNumber;
     }
 
     public void setUsername(String username) {
@@ -47,14 +47,14 @@ public class Users implements Serializable {
     }
 
     public void setType(int type) {
-        Type = type;
+        this.type = type;
     }
 
     public String getPassword() {
         return password;
     }
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phone;
     }
 
     public String getUsername() {
@@ -62,7 +62,7 @@ public class Users implements Serializable {
     }
 
     public int getType() {
-        return Type;
+        return type;
     }
 
     public int getUserId() {

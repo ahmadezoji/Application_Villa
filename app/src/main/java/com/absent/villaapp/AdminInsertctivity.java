@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,12 +24,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okio.BufferedSink;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdminInsertctivity extends AppCompatActivity {
     public Users CurrentUser;
@@ -40,6 +53,8 @@ public class AdminInsertctivity extends AppCompatActivity {
     public static final int RESULT_GALLERY = 0;
     private GoogleMap mMap;
     LatLng villa_latLng;
+    public static final String  BASE_URL = "http://84.241.1.59:9191/";
+    private APIs apIs;
 //    private static final String[] INITIAL_PERMS={
 //            Manifest.permission.ACCESS_FINE_LOCATION
 //    };
@@ -52,13 +67,19 @@ public class AdminInsertctivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_insert);
 
-        Intent intent=getIntent();
-        Bundle bundle=intent.getExtras();
-        CurrentUser=(Users) bundle.get("user");
-        ((TextView)(findViewById(R.id.m_Username_ShowVilla)))
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        CurrentUser = (Users) bundle.get("user");
+        ((TextView) (findViewById(R.id.m_Username_ShowVilla)))
                 .setText(CurrentUser.getUsername());
 
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apIs = retrofit.create(APIs.class);
 //        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 //                .findFragmentById(R.id.map_InsertVilla);
 //        mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -83,7 +104,21 @@ public class AdminInsertctivity extends AppCompatActivity {
 //        });
 
 
-//        if (!canAccessLocation()) {
+
+        /*Click Capture By Camera*/
+        btnCapture_Cam = (Button) findViewById(R.id.btnTakePicture);
+
+        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cInt, Image_Capture_Code);
+            }
+        });
+    }
+    private void Code()
+    {
+        //        if (!canAccessLocation()) {
 //            requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
 //        }
 
@@ -127,18 +162,36 @@ public class AdminInsertctivity extends AppCompatActivity {
 //            }
 //        });
 
-        /*Click Capture By Camera*/
-        btnCapture_Cam =(Button) findViewById(R.id.btnTakePicture);
-
-        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
+    }
+    private void AddVilla(final Villa villa)
+    {
+        Call<List<Villa>> call= apIs.createvillas(villa);
+        call.enqueue(new Callback<List<Villa>>() {
             @Override
-            public void onClick(View v) {
-                Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cInt,Image_Capture_Code);
+            public void onResponse(Call<List<Villa>> call, Response<List<Villa>> response) {
+                if (response.isSuccessful())
+                {
+                    List<Villa> villas= new ArrayList<>();
+                    villas=response.body();
+                    if (villas!=null)
+                    {
+                        Toast.makeText(AdminInsertctivity.this,"ثبت نام با موفقیت بود  !!",Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(AdminInsertctivity.this, "ثبت نام ناموفق بود  !!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Villa>> call, Throwable t) {
+
             }
         });
-    }
 
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Image_Capture_Code) {
@@ -198,50 +251,42 @@ public class AdminInsertctivity extends AppCompatActivity {
                 EditText VArea=(EditText)(findViewById(R.id.VArea));
                 EditText VAdderss=(EditText)(findViewById(R.id.VAdderss));
 
-//                villa.setTitle(VTitle.getText().toString());
-//                villa.setCost(Integer.valueOf(VCost.getText().toString()));
-//                villa.setRoomCount(Integer.valueOf(VRoomCnt.getText().toString()));
-//                villa.setCapacity(Integer.valueOf(VCapacity.getText().toString()));
-//                villa.setArea(Integer.valueOf(VArea.getText().toString()));
-//                villa.setAddress(VAdderss.getText().toString());
-//
+                villa.setTitle(VTitle.getText().toString());
+                villa.setCost(Integer.valueOf(VCost.getText().toString()));
+                villa.setRoomCount(Integer.valueOf(VRoomCnt.getText().toString()));
+                villa.setCapacity(Integer.valueOf(VCapacity.getText().toString()));
+                villa.setAddress(VAdderss.getText().toString());
+
 //                villa.setLat((float)villa_latLng.latitude);
 //                villa.setLon((float)villa_latLng.longitude);
-//
-//
-//                villa.setAdminUserId(CurrentUser.getUserId());
 
-                String Coverpic="null";
+                villa.setLat((float)63.2);
+                villa.setLon((float) 53.6);
+
+                villa.setAdminUserId(CurrentUser.getUserId());
 
 
-//            villaimgBMP = BitmapFactory.decodeResource(getResources(), R.drawable.index1);
+            villaimgBMP = BitmapFactory.decodeResource(getResources(), R.drawable.index1);
             if (villaimgBMP!=null) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArrayimg = stream.toByteArray();
-                Coverpic=android.util.Base64.encodeToString(byteArrayimg,android.util.Base64.DEFAULT);
+                int size=byteArrayimg.length;
+//                Coverpic=android.util.Base64.encodeToString(byteArrayimg,android.util.Base64.DEFAULT);
 
-//                villa.setPic(byteArrayimg);
+                villa.setPic(byteArrayimg);
             }
             else {
-//                villa.setPic(null);
+                villa.setPic(null);
             }
 
 
 
 //            new DatabaseHelper(this).AddVilla(villa);
-            new AddVillaTask().execute(
-                    VTitle.getText().toString(),
-                    VAdderss.getText().toString(),
-                    String.valueOf(villa_latLng.latitude),
-                    String.valueOf(villa_latLng.longitude),
-                    VCost.getText().toString(),
-                    VRoomCnt.getText().toString(),
-                    VCapacity.getText().toString(),
-                    Coverpic,
-                    String.valueOf(CurrentUser.getUserId()));
 
-//            VArea.getText().toString()
+
+
+            AddVilla(villa);
 
             VTitle.setText("");
             VCost.setText("");
@@ -249,7 +294,7 @@ public class AdminInsertctivity extends AppCompatActivity {
             VCapacity.setText("");
             VArea.setText("");
             VAdderss.setText("");
-            imgCapture.setImageBitmap(null);
+//            imgCapture.setImageBitmap(null);
 
 
         }
@@ -258,55 +303,6 @@ public class AdminInsertctivity extends AppCompatActivity {
             Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
         }
     }
-   public class AddVillaTask extends AsyncTask<String,Object,Object>
-   {
-       @Override
-       protected Object doInBackground(String... strings) {
-           try {
-
-               String strApi = new OkHttpClient().newCall(
-                       new Request.Builder()
-                               .url("http://84.241.1.59:9191/villas/add?" +
-                                       "title="+strings[0]+"&address="+strings[1]+"&lat="+strings[2]+
-                                       "&lon="+strings[3]+"&cost="+strings[4]+"" +
-                                       "&roomcnt="+strings[5]+"&capacity="+strings[6]+
-                                       "&cover="+strings[7]+"&providerid="+strings[8]+"")
-                               .build()
-               )
-                       .execute()
-                       .body()
-                       .string();
-               /*Call back Fill list IF SUCCESS*/
-//               JSONArray jsonArray=new JSONArray(strApi);
-//               for (int i=0;i<jsonArray.length();i++) {
-//                   Villa villa=new Villa();
-//                   JSONObject jsonObject =jsonArray.getJSONObject(i);
-//                   villa.setVillaId(jsonObject.getInt("id"));
-//                   villa.setRoomCount(jsonObject.getInt("roomcnt"));
-//                   villa.setCapacity(jsonObject.getInt("capacity"));
-//                   villa.setArea(jsonObject.getInt("area"));
-//                   villa.setAddress(jsonObject.getString("address"));
-//                   villa.setPic((jsonObject.getString("coverpic")).getBytes());
-//                   villa.setCost(jsonObject.getInt("cost"));
-//                   villa.setAdminUserId(jsonObject.getInt("ownerId"));
-//                   villas.add(villa);
-//
-//               }
-
-               return "true";
-
-           }
-           catch (Exception e) {
-               return false;
-           }
-       }
-
-       @Override
-       protected void onPostExecute(Object o) {
-           super.onPostExecute(o);
-       }
-   }
-
     public void Onclick_BtnCancle(View view) {
 
         Intent intent=new Intent(this,MainActivityAdmin.class);

@@ -31,14 +31,14 @@ public class UserLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        new DatabaseHelper(this).getReadableDatabase();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://84.241.1.59:9191/users/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        jsonAPI = retrofit.create(APIs.class);
-
-        getusers();
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://samples.openweathermap.org/data/2.5/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        jsonAPI = retrofit.create(APIs.class);
+//
+//        getusers();
     }
 
     public class GetApi extends AsyncTask<String,Object,List<Users>>

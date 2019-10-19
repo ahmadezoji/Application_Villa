@@ -13,27 +13,28 @@ import java.io.Serializable;
 public class Villa implements Serializable {
     public static final String ADMINUSER_ID = "AdminUserId";
     @DatabaseField(generatedId = true)
-    private int villaId;
+    private int id;
     @DatabaseField
     String title;
     @DatabaseField
-    private int roomCount;
-    @DatabaseField
-    private int capacity;
-    @DatabaseField
-    private int Area;
-    @DatabaseField
     private String address;
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] pic;
-    @DatabaseField
-    private int Cost;
-    @DatabaseField
-    private int AdminUserId;
     @DatabaseField
     float lat;
     @DatabaseField
     float lon;
+    @DatabaseField
+    private int cost;
+    @DatabaseField
+    private int roomcnt;
+    @DatabaseField
+    private int capacity;
+    @DatabaseField
+    private int area;
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    private byte[] cover;
+    @DatabaseField
+    private int providerid;
+
 
 
 
@@ -44,11 +45,11 @@ public class Villa implements Serializable {
     }
 
     public void setVillaId(int villaId) {
-        this.villaId = villaId;
+        this.id = villaId;
     }
 
     public void setAdminUserId(int adminUserId) {
-        AdminUserId = adminUserId;
+        this.providerid = adminUserId;
     }
 
     public void setAddress(String address) {
@@ -56,7 +57,7 @@ public class Villa implements Serializable {
     }
 
     public void setArea(int area) {
-        Area = area;
+        this.area = area;
     }
 
     public void setCapacity(int capacity) {
@@ -64,15 +65,15 @@ public class Villa implements Serializable {
     }
 
     public void setRoomCount(int roomCount) {
-        this.roomCount = roomCount;
+        this.roomcnt = roomCount;
     }
 
     public void setPic(byte[] pic) {
-        this.pic = pic;
+        this.cover = pic;
     }
 
     public void setCost(int cost) {
-        Cost = cost;
+        this.cost = cost;
     }
 
     public void setTitle(String title) {
@@ -100,7 +101,7 @@ public class Villa implements Serializable {
     }
 
     public int getArea() {
-        return Area;
+        return area;
     }
 
     public int getCapacity() {
@@ -108,11 +109,11 @@ public class Villa implements Serializable {
     }
 
     public int getRoomCount() {
-        return roomCount;
+        return roomcnt;
     }
 
     public Bitmap getPic() {
-        return BitmapFactory.decodeByteArray(pic,0,pic.length);
+        return BitmapFactory.decodeByteArray(cover,0,cover.length);
     }
 
     public String getAddress() {
@@ -120,14 +121,14 @@ public class Villa implements Serializable {
     }
 
     public int getCost() {
-        return Cost;
+        return cost;
     }
 
     public int getAdminUserId() {
-        return AdminUserId;
+        return providerid;
     }
 
     public int getVillaId() {
-        return villaId;
+        return id;
     }
 }
