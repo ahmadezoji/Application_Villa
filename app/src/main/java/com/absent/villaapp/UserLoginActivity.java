@@ -1,5 +1,7 @@
 package com.absent.villaapp;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -31,14 +34,9 @@ public class UserLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        new DatabaseHelper(this).getReadableDatabase();
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("https://samples.openweathermap.org/data/2.5/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//        jsonAPI = retrofit.create(APIs.class);
-//
-//        getusers();
+
+
+
     }
 
     public class GetApi extends AsyncTask<String,Object,List<Users>>

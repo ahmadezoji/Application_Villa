@@ -1,5 +1,8 @@
 package com.example.cardviewtest;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +65,6 @@ public class CustomeAdapter extends RecyclerView.Adapter<CustomeAdapter.MyViewHo
         if (dataSet.get(listPosition).getPic()!=null) {
             imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
         }
-
 
 
 

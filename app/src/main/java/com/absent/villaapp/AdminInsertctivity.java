@@ -1,12 +1,22 @@
 package com.absent.villaapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,7 +45,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okio.BufferedSink;
 import retrofit2.Call;
@@ -43,25 +56,25 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AdminInsertctivity extends AppCompatActivity {
+public class AdminInsertctivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
     private ImageView imgCapture;
-    private Bitmap villaimgBMP;
-    private static final int Image_Capture_Code = 1;
-    public static final int RESULT_GALLERY = 0;
+    private Bitmap villaimgBMP = null;
+
+    private String mCurrentPhotoPath;
+
+
+    private static final int GALLERY_PICTURE = 1;
+    private static final int CAMERA_REQUEST = 0;
+//    public static final int RESULT_GALLERY = 0;
+
     private GoogleMap mMap;
     LatLng villa_latLng;
-    public static final String  BASE_URL = "http://84.241.1.59:9191/";
+    public static final String BASE_URL = "http://84.241.1.59:9191/";
     private APIs apIs;
-//    private static final String[] INITIAL_PERMS={
-//            Manifest.permission.ACCESS_FINE_LOCATION
-//    };
-//    private static final String[] LOCATION_PERMS={
-//            Manifest.permission.ACCESS_FINE_LOCATION
-//    };
-//    private static final int INITIAL_REQUEST=1337;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,88 +93,84 @@ public class AdminInsertctivity extends AppCompatActivity {
                 .build();
 
         apIs = retrofit.create(APIs.class);
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map_InsertVilla);
-//        mapFragment.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap googleMap) {
-//                mMap = googleMap;
-//                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-//
-//                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//                    @Override
-//                    public void onMapClick(LatLng latLng) {
-//                        // Add a marker in Sydney and move the camera
-//                        mMap.clear();
-//                        villa_latLng = new LatLng(latLng.latitude, latLng.longitude);
-//                        mMap.addMarker(new MarkerOptions().position(villa_latLng));
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
-//                    }
-//                });
-//
-//
-//            }
-//        });
 
 
+        LocationManager locationManager = (LocationManager)
+                getSystemService(this.LOCATION_SERVICE);
+
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map_InsertVilla);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        // Add a marker in Sydney and move the camera
+                        mMap.clear();
+                        villa_latLng = new LatLng(latLng.latitude, latLng.longitude);
+                        mMap.addMarker(new MarkerOptions().position(villa_latLng));
+//                        mMap.setMyLocationEnabled(true);
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
+                    }
+                });
+
+
+            }
+        });
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},123);
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        imgCapture = (ImageView) findViewById(R.id.capturedImage);
+//        /*click Capture By Gallery*/
+        btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
+        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent galleryIntent = new Intent(
+//                        Intent.ACTION_PICK,
+//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(galleryIntent , RESULT_GALLERY );
+                 Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, GALLERY_PICTURE);
+            }
+        });
 
         /*Click Capture By Camera*/
-        btnCapture_Cam = (Button) findViewById(R.id.btnTakePicture);
+        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
 
         btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cInt, Image_Capture_Code);
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent,CAMERA_REQUEST);
+//                    MEDIA_TYPE_IMAGE_BY_CAMERA
+                }
             }
         });
     }
-    private void Code()
-    {
-        //        if (!canAccessLocation()) {
-//            requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
-//        }
-
-
-//        LocationManager lm =   (LocationManager)getSystemService(AdminInsertctivity.this.LOCATION_SERVICE);
-//        LocationListener ll = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//                double lat = location.getLatitude();
-//                double lng = location.getLongitude();
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//        };
-//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-
-
-//        imgCapture = (ImageView) findViewById(R.id.capturedImage);
-//        /*click Capture By Gallery*/
-//        btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
-//        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent galleryIntent = new Intent(
-//                        Intent.ACTION_PICK,
-//                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//                startActivityForResult(galleryIntent , RESULT_GALLERY );
-//            }
-//        });
-
+    @Override
+    public void onRequestPermissionsResult(final int requestCode,final String[] permissions,final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 123) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted.
+//                doLocationAccessRelatedJob();
+            } else {
+                // User refused to grant permission. You can add AlertDialog here
+                Toast.makeText(this, "You didn't give permission to access device location", Toast.LENGTH_LONG).show();
+//                startInstalledAppDetailsActivity();
+            }
+        }
     }
     private void AddVilla(final Villa villa)
     {
@@ -192,51 +201,6 @@ public class AdminInsertctivity extends AppCompatActivity {
         });
 
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Image_Capture_Code) {
-            if (resultCode == RESULT_OK) {
-                villaimgBMP = (Bitmap) data.getExtras().get("data");
-                imgCapture.setImageBitmap(villaimgBMP);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            }
-        }
-        if (requestCode == RESULT_GALLERY)     {
-            if (resultCode == RESULT_OK) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                if (cursor == null || cursor.getCount() < 1) {
-                    return; // no cursor or no record. DO YOUR ERROR HANDLING
-                }
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                if(columnIndex < 0) // no column index
-                    return; // DO YOUR ERROR HANDLING
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close(); // close cursor
-                /*Set Image Into IMAGE_VIEW*/
-                try{
-                    File f= new File(picturePath);
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
-                    villaimgBMP = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
-                    imgCapture.setImageBitmap(villaimgBMP);
-                }
-                catch (Exception e)
-                {
-                    imgCapture.setImageBitmap(null);
-                    Toast.makeText(this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
 
     public void Onclick_BtnAdd(View view)
     {
@@ -257,16 +221,16 @@ public class AdminInsertctivity extends AppCompatActivity {
                 villa.setCapacity(Integer.valueOf(VCapacity.getText().toString()));
                 villa.setAddress(VAdderss.getText().toString());
 
-//                villa.setLat((float)villa_latLng.latitude);
-//                villa.setLon((float)villa_latLng.longitude);
+                villa.setLat((float)villa_latLng.latitude);
+                villa.setLon((float)villa_latLng.longitude);
 
-                villa.setLat((float)63.2);
-                villa.setLon((float) 53.6);
+//                villa.setLat((float)63.2);
+//                villa.setLon((float) 53.6);
 
                 villa.setAdminUserId(CurrentUser.getUserId());
 
 
-            villaimgBMP = BitmapFactory.decodeResource(getResources(), R.drawable.index1);
+//            villaimgBMP = BitmapFactory.decodeResource(getResources(), R.drawable.index1);
             if (villaimgBMP!=null) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -311,7 +275,84 @@ public class AdminInsertctivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK)
+        {
+            if(resultCode==CAMERA_REQUEST)
+            {
+                Bitmap photo = (Bitmap)data.getExtras().get("data");
+//                Drawable drawable=new BitmapDrawable(photo);
+//                backGroundImageLinearLayout.setBackgroundDrawable(drawable);
 
+            }
+            else if(resultCode==GALLERY_PICTURE)
+            {
+                Uri selectedImage = data.getData();
+                String[] filePath = { MediaStore.Images.Media.DATA };
+                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+                villaimgBMP= (BitmapFactory.decodeFile(picturePath));
+//                Drawable drawable=new BitmapDrawable(thumbnail);
+//                backGroundImageLinearLayout.setBackgroundDrawable(drawable);
+
+
+            }
+        }
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("","");
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+
+        villa_latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(villa_latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
+    }
+
+
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("","");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("","");
+    }
+//    private class MyLocation implements LocationListener{
+//        @Override
+//        public void onProviderDisabled(String provider) {
+//            Log.d("","");
+//        }
+//        @Override
+//        public void onLocationChanged(Location location) {
+//
+//            Log.d("","");
+//        }
+//
+//
+//
+//        @Override
+//        public void onProviderEnabled(String provider) {
+//            Log.d("","");
+//        }
+//
+//        @Override
+//        public void onStatusChanged(String provider, int status, Bundle extras) {
+//            Log.d("","");
+//        }
+//    }
 
 }
+
+
 
