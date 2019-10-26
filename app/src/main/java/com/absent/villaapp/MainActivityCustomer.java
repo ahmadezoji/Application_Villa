@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cardviewtest.CustomeAdapter;
+import com.example.cardviewtest.CardAdapterCustomer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -79,6 +79,11 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
     public void filllist() {
 
         new GetVillasTaskCustomer().execute();
+    }
+
+    @Override
+    public void deleteVilla(int id) {
+
     }
 
     public class GetVillasTaskCustomer extends AsyncTask<Object,Object,ArrayList<Villa>>{
@@ -156,7 +161,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                 layoutManager = new LinearLayoutManager(MainActivityCustomer.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                adapter = new CustomeAdapter(villas);
+                adapter = new CardAdapterCustomer(villas);
                 recyclerView.setAdapter(adapter);
 
             }

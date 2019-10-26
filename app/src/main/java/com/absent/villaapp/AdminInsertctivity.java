@@ -29,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -75,6 +76,8 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
     public static final String BASE_URL = "http://84.241.1.59:9191/";
     private APIs apIs;
 
+    LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,40 +98,48 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         apIs = retrofit.create(APIs.class);
 
 
-        LocationManager locationManager = (LocationManager)
+        locationManager = (LocationManager)
                 getSystemService(this.LOCATION_SERVICE);
 
 
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_InsertVilla);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        // Add a marker in Sydney and move the camera
-                        mMap.clear();
-                        villa_latLng = new LatLng(latLng.latitude, latLng.longitude);
-                        mMap.addMarker(new MarkerOptions().position(villa_latLng));
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map_InsertVilla);
+//        mapFragment.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(GoogleMap googleMap) {
+//                mMap = googleMap;
+//                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+//                mMap.setMyLocationEnabled(true);
+//                mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+//                    @Override
+//                    public boolean onMyLocationButtonClick() {
+//                        return false;
+//                    }
+//                });
+//                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//                    @Override
+//                    public void onMapClick(LatLng latLng) {
+//                        // Add a marker in Sydney and move the camera
+//                        mMap.clear();
+//                        villa_latLng = new LatLng(latLng.latitude, latLng.longitude);
+//                        mMap.addMarker(new MarkerOptions().position(villa_latLng));
 //                        mMap.setMyLocationEnabled(true);
-
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
-                    }
-                });
-
-
-            }
-        });
+//
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
+//                    }
+//                });
+//
+//
+//            }
+//        });
 
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},123);
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+
         imgCapture = (ImageView) findViewById(R.id.capturedImage);
 //        /*click Capture By Gallery*/
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
@@ -163,12 +174,8 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 123) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted.
-//                doLocationAccessRelatedJob();
             } else {
-                // User refused to grant permission. You can add AlertDialog here
                 Toast.makeText(this, "You didn't give permission to access device location", Toast.LENGTH_LONG).show();
-//                startInstalledAppDetailsActivity();
             }
         }
     }
@@ -221,11 +228,11 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
                 villa.setCapacity(Integer.valueOf(VCapacity.getText().toString()));
                 villa.setAddress(VAdderss.getText().toString());
 
+
+
                 villa.setLat((float)villa_latLng.latitude);
                 villa.setLon((float)villa_latLng.longitude);
 
-//                villa.setLat((float)63.2);
-//                villa.setLon((float) 53.6);
 
                 villa.setAdminUserId(CurrentUser.getUserId());
 
@@ -305,6 +312,10 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         }
     }
 
+    //
+    //
+    /* Get Current Location CallBack*/
+    //
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("","");
@@ -312,45 +323,20 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
     @Override
     public void onLocationChanged(Location location) {
 
-        villa_latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(villa_latLng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
+        villa_latLng = new LatLng(location.getLatitude(), location.getLongitude());
+       // LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+       // mMap.animateCamera(cameraUpdate);
+      //  locationManager.removeUpdates(this);
     }
-
-
-
     @Override
     public void onProviderEnabled(String provider) {
         Log.d("","");
     }
-
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("","");
     }
-//    private class MyLocation implements LocationListener{
-//        @Override
-//        public void onProviderDisabled(String provider) {
-//            Log.d("","");
-//        }
-//        @Override
-//        public void onLocationChanged(Location location) {
-//
-//            Log.d("","");
-//        }
-//
-//
-//
-//        @Override
-//        public void onProviderEnabled(String provider) {
-//            Log.d("","");
-//        }
-//
-//        @Override
-//        public void onStatusChanged(String provider, int status, Bundle extras) {
-//            Log.d("","");
-//        }
-//    }
 
 }
 

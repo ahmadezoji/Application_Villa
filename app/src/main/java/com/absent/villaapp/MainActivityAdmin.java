@@ -19,12 +19,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivityAdmin extends AppCompatActivity implements VillaListOwner{
 
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
-
+    public static final String BASE_URL = "http://84.241.1.59:9191/";
+    private APIs apIs;
     public Users CurrentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,13 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
         ((TextView)(findViewById(R.id.m_UserName)))
                 .setText(CurrentUser.getUsername());
 
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apIs = retrofit.create(APIs.class);
 
         this.filllist();
     }
@@ -96,7 +112,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                 layoutManager = new LinearLayoutManager(MainActivityAdmin.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                adapter = new com.example.cardviewtest.CustomeAdapter(villas);
+                adapter = new CardAdapterAdmin(villas,MainActivityAdmin.this);
                 recyclerView.setAdapter(adapter);
             }
             else {
@@ -109,6 +125,30 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     @Override
     public void filllist() {
         new GetVillasTask().execute(CurrentUser.getUserId());
+    }
+    @Override
+    public void deleteVilla(int id) {
+
+        Call<Boolean> call= apIs.deleteVilla(id);
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(response.isSuccessful())
+                {
+                    boolean btrue=response.body();
+                    if (btrue)
+                    {
+                        filllist();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+
+            }
+        });
+
     }
 
     public void Onclick_BtnAdd(View view)

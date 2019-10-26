@@ -1,8 +1,5 @@
 package com.example.cardviewtest;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +8,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.absent.villaapp.MainActivityCustomer;
 import com.absent.villaapp.R;
 import com.absent.villaapp.Villa;
 
 import java.util.ArrayList;
 
-public class CustomeAdapter extends RecyclerView.Adapter<CustomeAdapter.MyViewHolder> {
+public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardviewtest.CardAdapterCustomer.MyViewHolder> {
 
     private ArrayList<Villa> dataSet;
 
@@ -33,11 +29,10 @@ public class CustomeAdapter extends RecyclerView.Adapter<CustomeAdapter.MyViewHo
             this.cost = (TextView) itemView.findViewById(R.id.textViewVersion);
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.imageView);
 
-//            #New Add
         }
     }
 
-    public CustomeAdapter(ArrayList<Villa> data) {
+    public CardAdapterCustomer(ArrayList<Villa> data) {
         this.dataSet = data;
     }
 

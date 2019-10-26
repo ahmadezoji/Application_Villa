@@ -34,19 +34,23 @@ public class Edit_Dialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.edit_dialog,container);
-        villa.setCost(Integer.valueOf(
-                ((EditText)view.findViewById(R.id.txt_price)).getText().toString()));
+//        villa.setCost(Integer.valueOf(
+//                ((EditText)view.findViewById(R.id.txt_price)).getText().toString()));
+//
+//        villa.setArea(Integer.valueOf(
+//                ((EditText)view.findViewById(R.id.txt_area)).getText().toString()));
+//
+//        villa.setCapacity(Integer.valueOf(
+//                ((EditText)view.findViewById(R.id.txt_capacity)).getText().toString()));
 
-        villa.setArea(Integer.valueOf(
-                ((EditText)view.findViewById(R.id.txt_area)).getText().toString()));
-
-        villa.setCapacity(Integer.valueOf(
-                ((EditText)view.findViewById(R.id.txt_capacity)).getText().toString()));
+        ((EditText)view.findViewById(R.id.txt_address_editDlg)).setText(villa.getAddress());
+        ((EditText)view.findViewById(R.id.txt_price_editDlg)).setText(String.valueOf(villa.getCost()));
+        ((EditText)view.findViewById(R.id.txt_roomcnt_editDlg)).setText(String.valueOf(villa.getRoomCount()));
 
         ((Button)view.findViewById(R.id.btn_update)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatabaseHelper(context).updateVilla(villa);
+                //new DatabaseHelper(context).updateVilla(villa);
                 villaListOwner.filllist();
                 Toast.makeText(context,"Villa Edited",Toast.LENGTH_SHORT).show();
                 dismiss();

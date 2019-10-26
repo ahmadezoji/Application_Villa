@@ -8,20 +8,20 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="قیمت"
-        android:id="@+id/txt_price"
+        android:hint="Address"
+        android:id="@+id/txt_address_editDlg"
         ></EditText>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="متراژ"
-        android:id="@+id/txt_area"
+        android:hint="Cost"
+        android:id="@+id/txt_price_editDlg"
         ></EditText>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="افراد"
-        android:id="@+id/txt_capacity"
+        android:hint="Room"
+        android:id="@+id/txt_roomcnt_editDlg"
         ></EditText>
 
     <LinearLayout

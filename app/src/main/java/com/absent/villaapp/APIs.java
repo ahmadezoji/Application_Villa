@@ -29,6 +29,9 @@ public interface APIs {
     @GET("villas/provider")
     Call<List<Villa>> getProviderVillas( @Query("PID") int PID);
 
+    @GET("villas/delete")
+    Call<Boolean> deleteVilla( @Query("id") int id);
+
     @POST("villas/add")
     Call<List<Villa>> createvillas(@Body Villa villa);
 }
