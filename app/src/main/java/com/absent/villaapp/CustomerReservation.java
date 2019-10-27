@@ -1,5 +1,7 @@
 package com.absent.villaapp;
 
+import androidx.viewpager.widget.PagerAdapter;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -40,4 +42,7 @@ public class CustomerReservation {
     public String getReservevDate() {
         return ReservevDate;
     }
+
+
+
 }

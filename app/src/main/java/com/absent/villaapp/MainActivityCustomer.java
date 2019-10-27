@@ -38,32 +38,28 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
     private GoogleMap mMap;
 
-
-
     public Users CurrentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_customer);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
-
-
-                // Add a marker in Sydney and move the camera
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")).setVisible(true);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-
-            }
-        });
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(GoogleMap googleMap) {
+//                mMap = googleMap;
+//                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+//
+//                // Add a marker in Sydney and move the camera
+//                LatLng sydney = new LatLng(-34, 151);
+//                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")).setVisible(true);
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//
+//
+//            }
+//        });
 
 
         Intent intent=getIntent();
@@ -144,19 +140,19 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
 
                 ArrayList<LatLng> latLngs=new ArrayList<>();
-                for (int i=0;i<villas.size();i++)
-                {
-                    LatLng VillaLoc = new LatLng(villas.get(i).getLat(),villas.get(i).getLon());
-
-                    MarkerOptions mo = new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())).visible(true);
-                    Marker marker = mMap.addMarker(mo);
-                    mo.anchor(0f, 0.5f);
-                    marker.showInfoWindow();
-
-
-//                    mMap.addMarker(new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(VillaLoc));
-                }
+//                for (int i=0;i<villas.size();i++)
+//                {
+//                    LatLng VillaLoc = new LatLng(villas.get(i).getLat(),villas.get(i).getLon());
+//
+//                    MarkerOptions mo = new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())).visible(true);
+//                    Marker marker = mMap.addMarker(mo);
+//                    mo.anchor(0f, 0.5f);
+//                    marker.showInfoWindow();
+//
+//
+////                    mMap.addMarker(new MarkerOptions().position(VillaLoc).title(String.valueOf(villas.get(i).getCost())));
+//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(VillaLoc));
+//                }
 
 
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -166,7 +162,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                 layoutManager = new LinearLayoutManager(MainActivityCustomer.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                adapter = new CardAdapterCustomer(villas);
+                adapter = new CardAdapterCustomer(villas,MainActivityCustomer.this,CurrentUser);
                 recyclerView.setAdapter(adapter);
 
             }

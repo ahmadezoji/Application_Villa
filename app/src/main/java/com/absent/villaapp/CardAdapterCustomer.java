@@ -1,5 +1,8 @@
 package com.example.cardviewtest;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +11,18 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.absent.villaapp.MainActivityAdmin;
 import com.absent.villaapp.R;
+import com.absent.villaapp.ReservationActivity;
+import com.absent.villaapp.UserLoginActivity;
+import com.absent.villaapp.Users;
 import com.absent.villaapp.Villa;
 
 import java.util.ArrayList;
 
 public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardviewtest.CardAdapterCustomer.MyViewHolder> {
-
+    private Users currentuser;
+    private Context context;
     private ArrayList<Villa> dataSet;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -32,7 +40,9 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardvi
         }
     }
 
-    public CardAdapterCustomer(ArrayList<Villa> data) {
+    public CardAdapterCustomer(ArrayList<Villa> data, Context context, Users currentuser) {
+        this.currentuser=currentuser;
+        this.context=context;
         this.dataSet = data;
     }
 
@@ -61,6 +71,15 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardvi
             imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
         }
 
+
+        ((View)holder.itemView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReservationActivity.class);
+                intent.putExtra("user",currentuser);
+                (context).startActivity(intent);
+            }
+        });
 
 
     }
