@@ -126,6 +126,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     public void filllist() {
         new GetVillasTask().execute(CurrentUser.getUserId());
     }
+
     @Override
     public void deleteVilla(int id) {
 
@@ -138,6 +139,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                     boolean btrue=response.body();
                     if (btrue)
                     {
+                        Toast.makeText(MainActivityAdmin.this,"Deleted",Toast.LENGTH_SHORT).show();
                         filllist();
                     }
                 }
@@ -151,10 +153,41 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
     }
 
+    @Override
+    public void editVilla(Villa villa) {
+       Call<Boolean> call=apIs.updateVilla(villa);
+
+       call.enqueue(new Callback<Boolean>() {
+           @Override
+           public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+               if(response.isSuccessful())
+               {
+                   Boolean btrue=response.body();
+                   if (btrue)
+                   {
+                       Toast.makeText(MainActivityAdmin.this,"Updated",Toast.LENGTH_SHORT).show();
+                       filllist();
+                   }
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Boolean> call, Throwable t) {
+
+           }
+       });
+    }
+    public void OnUser_Click(View view)
+    {
+        Intent intent=new Intent(this, UserLoginActivity.class);
+        startActivity(intent);
+    }
     public void Onclick_BtnAdd(View view)
     {
         Intent intent=new Intent(this, AdminInsertctivity.class);
         intent.putExtra("user",CurrentUser);
         startActivity(intent);
     }
+
+
 }

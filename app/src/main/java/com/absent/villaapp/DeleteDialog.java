@@ -41,7 +41,7 @@ public class DeleteDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 //                        new DatabaseHelper(context).deleteVilla(villa);
                         villaListOwner.deleteVilla(villa.getVillaId());
-                        Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+
 
                     }
 

@@ -86,6 +86,11 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
     }
 
+    @Override
+    public void editVilla(Villa villa) {
+
+    }
+
     public class GetVillasTaskCustomer extends AsyncTask<Object,Object,ArrayList<Villa>>{
         @Override
         protected ArrayList<Villa> doInBackground(Object... objects) {

@@ -252,11 +252,6 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
             }
 
 
-
-//            new DatabaseHelper(this).AddVilla(villa);
-
-
-
             AddVilla(villa);
 
             VTitle.setText("");

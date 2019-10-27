@@ -115,6 +115,9 @@ public class Villa implements Serializable {
     public Bitmap getPic() {
         return BitmapFactory.decodeByteArray(cover,0,cover.length);
     }
+    public byte[] getPic_byte() {
+        return cover;
+    }
 
     public String getAddress() {
         return address;
