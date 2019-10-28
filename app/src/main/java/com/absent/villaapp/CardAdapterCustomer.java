@@ -77,6 +77,7 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardvi
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReservationActivity.class);
                 intent.putExtra("user",currentuser);
+                intent.putExtra("villa",dataSet.get(listPosition));
                 (context).startActivity(intent);
             }
         });

@@ -3,18 +3,36 @@ package com.absent.villaapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 
-public class ReservationActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class ReservationActivity extends AppCompatActivity implements Ownerstate {
     public Users CurrentUser;
+    public Villa Currentvilla;
+
+    public static final String BASE_URL = "http://84.241.1.59:9191/";
+    private APIs apIs;
 
     private static ViewPager mPager;
     private static int currentPage = 0;
@@ -29,13 +47,25 @@ public class ReservationActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Bundle bundle=intent.getExtras();
         CurrentUser=(Users) bundle.get("user");
+        Currentvilla=(Villa) bundle.get("villa");
         ((TextView)(findViewById(R.id.m_Username_Reservation)))
                 .setText(CurrentUser.getUsername());
 
 
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apIs = retrofit.create(APIs.class);
+
+
+        /*Fill Villa Details*/
+
         imageModelArrayList=new ArrayList<>();
 
-        imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
+        imageModelArrayList.add(Currentvilla.getPic());
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
@@ -51,11 +81,82 @@ public class ReservationActivity extends AppCompatActivity {
 
         indicator.setViewPager(mPager);
 
+
+        /*------------------------------------------------------------------*/
+
         final float density = getResources().getDisplayMetrics().density;
 
-//Set circle indicator radius
         indicator.setRadius(5 * density);
 
+    }
 
+
+    @Override
+    public void set_date(String date) {
+        ((EditText)(findViewById(R.id.txt_startdate)))
+                .setText(date);
+    }
+    public void Onclick_CalenderView(View view)
+    {
+        Calender_Dialog dialog=new Calender_Dialog();
+        dialog.setContext(ReservationActivity.this);
+        dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+        //        dialog.setVillaListOwner((VillaListOwner) context);
+        FragmentManager fm =(ReservationActivity.this).getFragmentManager();
+        dialog.show(fm,"");
+    }
+    public void Onclick_CancleReserve(View view)
+    {
+        Intent intent=new Intent(this, MainActivityCustomer.class);
+        startActivity(intent);
+    }
+    public void Onclick_Reserve(View view)
+    {
+        try {
+
+
+                String startdate=
+                        ((EditText)(findViewById(R.id.txt_startdate)))
+                        .getText().toString();
+
+                Integer reserve_duration=2;
+//                Integer reserve_duration=Integer.valueOf(
+//                        ((EditText)(findViewById(R.id.txt_duration)))
+//                                .getText().toString());
+
+                CustomerReservation reservation=new CustomerReservation(
+                        CurrentUser.getUserId(),Currentvilla.getVillaId(),startdate,reserve_duration );
+
+                addReservation(reservation);
+
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this,"Error In Reservation !!",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void addReservation(CustomerReservation reservation)
+    {
+        Call<Boolean> call=apIs.addReservarion(reservation);
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful())
+                {
+                    if ((Boolean) response.body())
+                    {
+                        Toast.makeText(ReservationActivity.this,"Reservation Successed !!",Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(ReservationActivity.this,"Reservation Failed !!",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

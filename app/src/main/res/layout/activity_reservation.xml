@@ -27,8 +27,8 @@
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
             android:layout_alignParentTop="true" />
 
         <com.viewpagerindicator.CirclePageIndicator
@@ -42,6 +42,78 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_marginTop="1mm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:fontFamily="casual"
+                android:hint="Start Date"
+                android:textSize="5mm"
+                android:layout_marginRight="10mm"
+                android:layout_marginLeft="10mm"
+                android:layout_marginTop="1dp"
+                android:background="#DB5151"
+                android:id="@+id/txt_startdate"
+                android:layout_width="0mm"
+                android:layout_weight="9"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"/>
+
+            <Button
+                android:onClick="Onclick_CalenderView"
+                android:background="@android:drawable/ic_menu_my_calendar"
+                android:layout_weight="1"
+                android:layout_width="0mm"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:fontFamily="casual"
+            android:hint="Duration"
+            android:textSize="5mm"
+            android:layout_marginRight="15mm"
+            android:layout_marginLeft="15mm"
+            android:layout_marginTop="2mm"
+            android:background="#DB5151"
+            android:id="@+id/txt_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:onClick="Onclick_Reserve"
+            android:textColor="#051663"
+            android:text="Next"
+            android:layout_marginTop="1mm"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <Button
+            android:onClick="Onclick_CancleReserve"
+            android:textColor="#051663"
+            android:text="Cancle"
+            android:layout_marginTop="1mm"
+            android:textSize="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

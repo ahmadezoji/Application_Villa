@@ -5,6 +5,21 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+<!--    <androidx.drawerlayout.widget.DrawerLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <include-->
+<!--            layout="@layout/app_bar_main"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+<!--        <com.google.android.material.navigation.NavigationView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--    </androidx.drawerlayout.widget.DrawerLayout>-->
+
     <LinearLayout
         android:orientation="horizontal"
         android:background="@color/primaryColor"
@@ -37,7 +52,8 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="30mm"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            />
 
     </LinearLayout>
     <LinearLayout

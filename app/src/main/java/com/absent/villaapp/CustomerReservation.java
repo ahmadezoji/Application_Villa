@@ -8,41 +8,63 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class CustomerReservation {
     @DatabaseField(generatedId = true)
-    private int Id;
+    private int id;
     @DatabaseField
-    private int userId;
+    private int uid;
     @DatabaseField
-    private int villaId;
+    private int vid;
     @DatabaseField
-    private String ReservevDate;
+    private String reservedate;
     @DatabaseField
-    private String ReservevDuration;
+    private int duration;
 
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public CustomerReservation() {
     }
 
-    public void setVillaId(int villaId) {
-        this.villaId = villaId;
+    public CustomerReservation(int uid, int vid, String reservedate, int duration) {
+        this.uid = uid;
+        this.vid = vid;
+        this.reservedate = reservedate;
+        this.duration = duration;
     }
 
-    public void setReservevDate(String reservevDate) {
-        ReservevDate = reservevDate;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
-    public int getVillaId() {
-        return villaId;
+    public void setVid(int vid) {
+        this.vid = vid;
     }
 
-    public String getReservevDate() {
-        return ReservevDate;
+    public void setReservedate(String reservedate) {
+        this.reservedate = reservedate;
     }
 
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 
+    public int getId() {
+        return id;
+    }
 
+    public int getUid() {
+        return uid;
+    }
+
+    public int getVid() {
+        return vid;
+    }
+
+    public String getReservedate() {
+        return reservedate;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
 }

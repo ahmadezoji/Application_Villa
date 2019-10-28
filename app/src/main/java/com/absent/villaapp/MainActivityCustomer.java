@@ -3,23 +3,23 @@ package com.absent.villaapp;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cardviewtest.CardAdapterCustomer;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -36,13 +36,19 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
     static View.OnClickListener myOnClickListener;
     private static ArrayList<Integer> removedItems;
 
+
     private GoogleMap mMap;
 
     public Users CurrentUser;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_customer);
+
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar?.setHomeButtonEnabled(true)
 
 //        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 //                .findFragmentById(R.id.map);
@@ -86,6 +92,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
     public void editVilla(Villa villa) {
 
     }
+
 
     public class GetVillasTaskCustomer extends AsyncTask<Object,Object,ArrayList<Villa>>{
         @Override
@@ -171,5 +178,26 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                 Toast.makeText(MainActivityCustomer.this,"ناموجود ",Toast.LENGTH_LONG).show();
             }
         }
+    }
+    /*Menu Functions Override*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_drawer, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_signOut: {
+                Intent intent = new Intent(this, UserLoginActivity.class);
+                startActivity(intent);
+            }
+
+
+        }
+        return true;
     }
 }

@@ -104,6 +104,7 @@
 
         </LinearLayout>
         <ImageView
+            android:src="@drawable/sh_line"
             android:background="#EEE1E1"
             android:id="@+id/capturedImage"
             android:layout_weight="0.7"
