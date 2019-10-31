@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,10 +120,10 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
                         ((EditText)(findViewById(R.id.txt_startdate)))
                         .getText().toString();
 
-                Integer reserve_duration=2;
-//                Integer reserve_duration=Integer.valueOf(
-//                        ((EditText)(findViewById(R.id.txt_duration)))
-//                                .getText().toString());
+//                Integer reserve_duration=2;
+                Integer reserve_duration=Integer.valueOf(
+                        ((EditText)(findViewById(R.id.txt_duration)))
+                                .getText().toString());
 
                 CustomerReservation reservation=new CustomerReservation(
                         CurrentUser.getUserId(),Currentvilla.getVillaId(),startdate,reserve_duration );
@@ -136,6 +137,18 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
             Toast.makeText(this,"Error In Reservation !!",Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public int daysBetween(Calendar startDate, Calendar endDate) {
+
+        int duration=Math.abs(startDate.get(Calendar.DAY_OF_MONTH)-endDate.get(Calendar.DAY_OF_MONTH));
+        ((EditText)(findViewById(R.id.txt_duration)))
+                .setText(String.valueOf(
+                        duration
+                ));
+
+        return duration;
     }
 
     public void addReservation(CustomerReservation reservation)
@@ -158,5 +171,10 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
                 Toast.makeText(ReservationActivity.this,"Reservation Failed !!",Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void checkAutenticateUser() {
+
     }
 }

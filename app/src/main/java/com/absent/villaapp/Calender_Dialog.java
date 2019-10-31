@@ -13,12 +13,26 @@ import android.widget.CalendarView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import sun.bob.mcalendarview.vo.DateData;
 
 public class Calender_Dialog extends DialogFragment {
     private Context context;
     private Ownerstate ownerstate;
+
+
+    final static  List<Calendar> calendarList=new ArrayList<>();
+    static int c=0;
+    static String m_date;
 
     public void setContext(Context context) {
         this.context = context;
@@ -30,9 +44,9 @@ public class Calender_Dialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.calender_layout,container);
-        CalendarView calendarView=((CalendarView)(view.findViewById(R.id.m_calenderView)));
+        final CalendarView calendarView=((CalendarView)(view.findViewById(R.id.m_calenderView)));
 
-
+//        calendarList.get(0);
 
         final long millis = System.currentTimeMillis();
         calendarView.setDate(millis);
@@ -41,10 +55,34 @@ public class Calender_Dialog extends DialogFragment {
                 .setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                        String m_date=String.valueOf(year)+"/"+String.valueOf(month)+"/"+String.valueOf(dayOfMonth);
-                        ((Ownerstate)context).set_date(m_date);
+//                        String m_date=String.valueOf(year)+"/"+String.valueOf(month)+"/"+String.valueOf(dayOfMonth);
 
-                        dismiss();
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendarList.add(c,cal);
+
+                        c=c+1;
+                        if (c > 1) {
+                            ((Ownerstate)context).daysBetween(calendarList.get(0),calendarList.get(1));
+
+                            m_date= String.valueOf(calendarList.get(0).get(Calendar.YEAR))+"/"+
+                                    String.valueOf(calendarList.get(0).get(Calendar.MONTH))+"/"+
+                                    String.valueOf(calendarList.get(0).get(Calendar.DAY_OF_MONTH)) +" - "+
+                                    String.valueOf(calendarList.get(1).get(Calendar.YEAR))+"/"+
+                                    String.valueOf(calendarList.get(1).get(Calendar.MONTH))+"/"+
+                                    String.valueOf(calendarList.get(1).get(Calendar.DAY_OF_MONTH)) ;
+
+
+
+                            ((Ownerstate)context).set_date(m_date);
+                            c = 0;
+                            dismiss();
+                        }
+
+
+
 
 
                     }
@@ -53,5 +91,9 @@ public class Calender_Dialog extends DialogFragment {
 
 
         return view;
+    }
+
+    public static int daysBetween(Calendar startDate, Calendar endDate) {
+        return Math.abs(startDate.get(Calendar.DAY_OF_MONTH)-endDate.get(Calendar.DAY_OF_MONTH));
     }
 }

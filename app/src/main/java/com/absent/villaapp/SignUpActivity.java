@@ -1,5 +1,8 @@
 package com.absent.villaapp;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -16,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,9 +31,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SignUpActivity extends AppCompatActivity {
-    public static final String  BASE_URL = "http://84.241.1.59:9191/";
+public class SignUpActivity extends AppCompatActivity implements Ownerstate{
+    public static final String BASE_URL = "http://84.241.1.59:9191/";
     private APIs apIs;
+    private int AutenticatKey;
+    Users currentuser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
     public void onclick_btnSignup(View view)
     {
-        Users user=new Users();
+        currentuser=new Users();
 
         String username=
         ((EditText)(findViewById(R.id.m_usernameSignUP)))
@@ -57,64 +66,55 @@ public class SignUpActivity extends AppCompatActivity {
                 ((EditText)(findViewById(R.id.m_phonSignUP)))
                         .getText().toString();
 
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setPhoneNumber(phonenumber);
-        user.setType(1);
+        currentuser.setUsername(username);
+        currentuser.setPassword(password);
+        currentuser.setPhoneNumber(phonenumber);
+        currentuser.setType(1);
 
-        Addusers(user);
+        AutenticatKey=getAutenticateKey();
+        SendAutenticatKeyToPhone(AutenticatKey);
 
-       // new SignUpTask().execute(username,password,phonenumber);
     }
 
-    public class SignUpTask extends AsyncTask<String,Object, List<Users>>
+    public class SendKeytoPhoneTask extends AsyncTask<String,Object,Integer>
     {
         @Override
-        protected List<Users> doInBackground(String... strings) {
+        protected void onPostExecute(Integer integer) {
+            if (integer==1)//send To Phone Success
+            {
+                AutenticatInsert_Dialog dialog=new AutenticatInsert_Dialog();
+                dialog.setContext(SignUpActivity.this);
+                dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+                dialog.setAutheticatekey(AutenticatKey);
+                FragmentManager fm =(SignUpActivity.this).getFragmentManager();
+                dialog.show(fm,"");
+            }
+            else
+                Toast.makeText(SignUpActivity.this, "Error", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
             try {
 
-                List<Users> users=new ArrayList<>();
-                String strApi = new OkHttpClient().newCall(
+                String strApi=new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url("http://84.241.1.59:9191/users/add?" +
-                                        "username="+strings[0]+
-                                        "&password="+strings[1]+"" +
-                                        "&phone="+strings[2]+"&type=1")
+                                .url("https://www.payam-resan.com/APISend.aspx?Username=09195835135&Password=a09367854752A&From=50002060499999&" +
+                                        "To="+strings[0]+"&Text="+strings[1]+"")
                                 .build()
                 )
                         .execute()
                         .body()
                         .string();
-                /*Call back Fill list IF SUCCESS*/
-                JSONArray jsonArray=new JSONArray(strApi);
-                for (int i=0;i<jsonArray.length();i++) {
-                    Users users1=new Users();
-                    JSONObject jsonObject =jsonArray.getJSONObject(i);
-                    users1.setUserId(jsonObject.getInt("id"));
-                    users1.setUsername(jsonObject.getString("username"));
-                    users1.setPassword(jsonObject.getString("password"));
-                    users1.setPhoneNumber(jsonObject.getString("phone"));
-                    users1.setType(jsonObject.getInt("type"));
-                    users.add(users1);
 
-                }
 
-                return users;
-            }
-            catch (Exception e) {
-                return null;
-            }
-        }
+                return Integer.valueOf(strApi);
 
-        @Override
-        protected void onPostExecute(List<Users> users) {
-            if (users!=null) {
-                Toast.makeText(SignUpActivity.this, "ثبت نام با موفقیت بود  !!", Toast.LENGTH_LONG).show();
             }
-            else {
-                Toast.makeText(SignUpActivity.this, "ثبت نام ناموفق بود  !!", Toast.LENGTH_LONG).show();
+            catch (Exception e)
+            {
+                return 0;
             }
-
         }
     }
 
@@ -141,4 +141,35 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
     }
+
+    public int getAutenticateKey()
+    {
+        int max=999999;
+        int min=100000;
+
+
+        return (int)((Math.random() * ((max - min) + 1)) + min);
+    }
+    public void SendAutenticatKeyToPhone(int Key)
+    {
+        String phone=((EditText)(findViewById(R.id.m_phonSignUP))).getText().toString();
+
+        String[] param = {phone,String.valueOf(Key)};
+        new SendKeytoPhoneTask().execute(param);
+    }
+    @Override
+    public void checkAutenticateUser() {
+        Addusers(currentuser);
+    }
+
+    @Override
+    public void set_date(String date) {
+
+    }
+
+    @Override
+    public int daysBetween(Calendar startDate, Calendar endDate) {
+    return 0;
+    }
+
 }

@@ -47,4 +47,8 @@ dependencies {
 
     implementation 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
 
+    implementation 'sun.bob:mcalendarview:1.0.0'
+
+
+
 }

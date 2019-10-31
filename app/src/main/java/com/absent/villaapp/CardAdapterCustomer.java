@@ -1,4 +1,4 @@
-package com.example.cardviewtest;
+package com.absent.villaapp;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +20,7 @@ import com.absent.villaapp.Villa;
 
 import java.util.ArrayList;
 
-public class CardAdapterCustomer extends RecyclerView.Adapter<com.example.cardviewtest.CardAdapterCustomer.MyViewHolder> {
+public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustomer.MyViewHolder> {
     private Users currentuser;
     private Context context;
     private ArrayList<Villa> dataSet;
