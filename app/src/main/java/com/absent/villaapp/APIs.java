@@ -18,6 +18,9 @@ public interface APIs {
     @GET("users/all")
     Call<List<Users>> getusers();
 
+    @GET("users/findByPhone")
+    Call<List<Users>> getuserBYphone(@Query("phone") String phone);
+
     @POST("users/add")
     Call<List<Users>> createuser(@Body Users users);
 
@@ -27,7 +30,7 @@ public interface APIs {
 
 
     @GET("villas/provider")
-    Call<List<Villa>> getProviderVillas( @Query("PID") int PID);
+    Call<List<Villa>> getProviderVillas(@Query("PID") int PID);
 
     @GET("villas/delete")
     Call<Boolean> deleteVilla( @Query("id") int id);

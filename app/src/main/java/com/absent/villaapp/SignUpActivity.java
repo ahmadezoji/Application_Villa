@@ -71,11 +71,40 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
         currentuser.setPhoneNumber(phonenumber);
         currentuser.setType(1);
 
-        AutenticatKey=getAutenticateKey();
-        SendAutenticatKeyToPhone(AutenticatKey);
+
+        IsExist(phonenumber);
+
+
 
     }
+   public void IsExist(String phone)
+   {
+        Call<List<Users>> call=apIs.getuserBYphone(phone);
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+                if (response.isSuccessful())
+                {
+                    List<Users> users=response.body();
+                    if (users==null)
+                    {
+                        AutenticatKey = getAutenticateKey();
+                        SendAutenticatKeyToPhone(AutenticatKey);
+                    }
+                    else
+                        Toast.makeText(SignUpActivity.this, "This Phone Number Registered Later !!", Toast.LENGTH_LONG).show();
 
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+
+            }
+        });
+
+   }
     public class SendKeytoPhoneTask extends AsyncTask<String,Object,Integer>
     {
         @Override
