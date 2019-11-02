@@ -67,8 +67,10 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
 
         title.setText(dataSet.get(listPosition).getAddress());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
-        if (dataSet.get(listPosition).getPic()!=null) {
+        if (dataSet.get(listPosition).getPic_byte().length!=0) {
+            imageViewIcon.setVisibility(View.VISIBLE);
             imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
+
         }
 
 

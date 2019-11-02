@@ -19,9 +19,9 @@
             android:layout_width="386dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-
+<!--            android:src="@drawable/sh_line"-->
+<!--            android:background="@color/cardview_dark_background"-->
             <ImageView
-                android:src="@drawable/sh_line"
                 android:id="@+id/imageView_admin"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

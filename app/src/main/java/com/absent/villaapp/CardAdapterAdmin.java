@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
 
             this.title = (TextView) itemView.findViewById(R.id.textViewName_admin);
             this.cost = (TextView) itemView.findViewById(R.id.textViewVersion_admin);
+            this.imageViewIcon = (ImageView)itemView.findViewById(R.id.imageView_admin);
             this.Btn_Edit = (Button) itemView.findViewById(R.id.m_btn_cardEdit);
             this.Btn_Del = (Button) itemView.findViewById(R.id.m_btn_cardDel);
 
@@ -67,8 +70,10 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
 
         title.setText(dataSet.get(listPosition).getAddress());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
-        if (dataSet.get(listPosition).getPic()!=null) {
+        if (dataSet.get(listPosition).getPic_byte().length!=0) {
+            imageViewIcon.setVisibility(View.VISIBLE);
             imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
+
         }
 
         btn_Edit.setOnClickListener(new View.OnClickListener() {

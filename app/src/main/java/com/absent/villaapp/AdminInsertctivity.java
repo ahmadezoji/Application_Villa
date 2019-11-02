@@ -1,6 +1,7 @@
 package com.absent.villaapp;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,15 +63,15 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
     public Users CurrentUser;
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
-    private ImageView imgCapture;
     private Bitmap villaimgBMP = null;
 
     private String mCurrentPhotoPath;
 
 
-    private static final int GALLERY_PICTURE = 1;
-    private static final int CAMERA_REQUEST = 0;
-//    public static final int RESULT_GALLERY = 0;
+    private static final int GALLERY_PICTURE = 20;
+    private static final int TAKE_PICTURE = 1;
+    private Uri imageUri;
+//    public static final int RESULT_GALLERY = -1;
 
     private GoogleMap mMap;
     LatLng villa_latLng;
@@ -140,18 +142,15 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 
-        imgCapture = (ImageView) findViewById(R.id.capturedImage);
+
 //        /*click Capture By Gallery*/
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
         btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent galleryIntent = new Intent(
-//                        Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(galleryIntent , RESULT_GALLERY );
-                 Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, GALLERY_PICTURE);
+                 Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                 startActivityForResult(intent, GALLERY_PICTURE);
+
             }
         });
 
@@ -161,11 +160,12 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent,CAMERA_REQUEST);
-//                    MEDIA_TYPE_IMAGE_BY_CAMERA
-                }
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                        Uri.fromFile(photo));
+//                imageUri = Uri.fromFile(photo);
+                startActivityForResult(intent, TAKE_PICTURE);
             }
         });
     }
@@ -184,7 +184,7 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         Call<List<Villa>> call= apIs.createvillas(villa);
         call.enqueue(new Callback<List<Villa>>() {
             @Override
-            public void onResponse(Call<List<Villa>> call, Response<List<Villa>> response) {
+            public void onResponse( Call<List<Villa>> call, Response<List<Villa>> response) {
                 if (response.isSuccessful())
                 {
                     List<Villa> villas= new ArrayList<>();
@@ -221,6 +221,7 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
                 EditText VCapacity=(EditText)(findViewById(R.id.VCapacity));
                 EditText VArea=(EditText)(findViewById(R.id.VArea));
                 EditText VAdderss=(EditText)(findViewById(R.id.VAdderss));
+                ImageView imageView =(ImageView)findViewById(R.id.capturedImage);
 
                 villa.setTitle(VTitle.getText().toString());
                 villa.setCost(Integer.valueOf(VCost.getText().toString()));
@@ -230,8 +231,11 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
 
 
 
-                villa.setLat((float)villa_latLng.latitude);
-                villa.setLon((float)villa_latLng.longitude);
+//                villa.setLat((float)villa_latLng.latitude);
+//                villa.setLon((float)villa_latLng.longitude);
+
+                villa.setLat((float)52.2);
+                villa.setLon((float)60.1);
 
 
                 villa.setAdminUserId(CurrentUser.getUserId());
@@ -242,9 +246,6 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArrayimg = stream.toByteArray();
-                int size=byteArrayimg.length;
-//                Coverpic=android.util.Base64.encodeToString(byteArrayimg,android.util.Base64.DEFAULT);
-
                 villa.setPic(byteArrayimg);
             }
             else {
@@ -260,7 +261,7 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
             VCapacity.setText("");
             VArea.setText("");
             VAdderss.setText("");
-//            imgCapture.setImageBitmap(null);
+            imageView.setImageBitmap(null);
 
 
         }
@@ -280,31 +281,32 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK)
-        {
-            if(resultCode==CAMERA_REQUEST)
-            {
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == TAKE_PICTURE) {
                 Bitmap photo = (Bitmap)data.getExtras().get("data");
-//                Drawable drawable=new BitmapDrawable(photo);
-//                backGroundImageLinearLayout.setBackgroundDrawable(drawable);
+                ImageView imgCapture = (ImageView) findViewById(R.id.capturedImage);
+                imgCapture.setImageBitmap(photo);
+                villaimgBMP=photo;
 
-            }
-            else if(resultCode==GALLERY_PICTURE)
-            {
-                Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
-                c.close();
-                villaimgBMP= (BitmapFactory.decodeFile(picturePath));
-//                Drawable drawable=new BitmapDrawable(thumbnail);
-//                backGroundImageLinearLayout.setBackgroundDrawable(drawable);
 
+
+            } else if (requestCode == GALLERY_PICTURE) {
+                try{
+                    Uri imageUri = data.getData();
+                    ImageView imageView = (ImageView) findViewById(R.id.capturedImage);
+                    villaimgBMP = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    imageView.setImageURI(imageUri);
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(this, "Erroe in Image Insert !!", Toast.LENGTH_SHORT).show();
+                }
 
             }
         }
+
+
     }
 
     //

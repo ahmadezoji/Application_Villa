@@ -51,6 +51,10 @@
             android:layout_height="8mm">
 
         </EditText>
+
+
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -120,7 +124,7 @@
             android:id="@+id/map_InsertVilla"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="20mm"
+            android:layout_height="15mm"
             android:scrollbars="vertical" />
     </LinearLayout>
     <LinearLayout

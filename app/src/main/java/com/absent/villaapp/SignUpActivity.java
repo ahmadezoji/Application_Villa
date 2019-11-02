@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
                 if (response.isSuccessful())
                 {
                     List<Users> users=response.body();
-                    if (users==null)
+                    if (users.size()==0)
                     {
                         AutenticatKey = getAutenticateKey();
                         SendAutenticatKeyToPhone(AutenticatKey);

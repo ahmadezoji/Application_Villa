@@ -3,6 +3,7 @@ package com.absent.villaapp;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -122,7 +123,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                     villa.setLat(jsonObject.getInt("lat"));
                     villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic(jsonObject.getString("cover").getBytes());
+                    villa.setPic(Base64.decode(jsonObject.getString("cover"), Base64.DEFAULT));
                     villa.setCost(jsonObject.getInt("cost"));
                     villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);

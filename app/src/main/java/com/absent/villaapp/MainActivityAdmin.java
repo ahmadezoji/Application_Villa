@@ -1,9 +1,13 @@
 package com.absent.villaapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +58,8 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
         apIs = retrofit.create(APIs.class);
 
+
+
         this.filllist();
     }
 
@@ -85,12 +91,14 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                     villa.setLat(jsonObject.getInt("lat"));
                     villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic((jsonObject.getString("cover")).getBytes());
+                    villa.setPic(Base64.decode(jsonObject.getString("cover"), Base64.DEFAULT));//Import Just Byte[]
                     villa.setCost(jsonObject.getInt("cost"));
                     villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);
 
                 }
+
+
 
                 return villas;
             }
@@ -102,8 +110,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
         @Override
         protected void onPostExecute(ArrayList<Villa> villas) {
             if (villas!=null) {
-//                ((ListView)(findViewById(R.id.m_List_Admin)))
-//                        .setAdapter(new VillaAdapterCustomer(MainActivityAdmin.this,villas));
+
 
                 recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_Admin);
                 recyclerView.setHasFixedSize(true);
