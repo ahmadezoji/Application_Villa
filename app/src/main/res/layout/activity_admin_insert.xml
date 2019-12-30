@@ -6,153 +6,138 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:background="@color/primaryColor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/m_Username_ShowVilla"
-            android:background="#FF9800"
-            android:padding="5mm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="30mm"
+        android:orientation="horizontal">
+
+      <ImageView
+          android:scaleType="fitXY"
+          android:onClick="OnclickePic1_AdminInsert"
+          android:id="@+id/pic1_InsertVilla"
+          android:background="@drawable/ic_launcher_background"
+          android:layout_weight="0.2"
+          android:layout_width="0mm"
+          android:layout_height="match_parent"/>
+        <ImageView
+            android:scaleType="fitXY"
+            android:onClick="OnclickePic2_AdminInsert"
+            android:id="@+id/pic2_InsertVilla"
+            android:background="@drawable/ic_launcher_background"
+            android:layout_weight="0.2"
+            android:layout_width="0mm"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:scaleType="fitXY"
+            android:onClick="OnclickePic3_AdminInsert"
+            android:id="@+id/pic3_InsertVilla"
+            android:background="@drawable/ic_launcher_background"
+            android:layout_weight="0.2"
+            android:layout_width="0mm"
+            android:layout_height="match_parent"/>
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:padding="0mm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    <Button
-        android:layout_marginLeft="20mm"
-        android:id="@+id/btnTakePicture"
-        android:text="دوربین"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-    <Button
-        android:id="@+id/m_uploadBtn"
-        android:text="آپلود"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    </LinearLayout>
+<!--        <ImageView-->
+<!--            android:src="@drawable/sh_line"-->
+<!--            android:background="#EEE1E1"-->
+<!--            android:id="@+id/capturedImage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0mm"-->
+<!--            android:layout_weight="5"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="36mm"
+        android:orientation="vertical">
 
         <EditText
-            android:textSize="4mm"
             android:textAlignment="center"
             android:hint="عنوان"
             android:id="@+id/VTitle"
             android:layout_width="match_parent"
-            android:layout_height="8mm">
+            android:layout_height="0mm"
+            android:layout_weight="0.1" />
 
-        </EditText>
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="0.3"
-            android:layout_width="wrap_content"
-            android:layout_height="40mm">
-
-            <EditText
-                android:textSize="4mm"
-                android:id="@+id/VCost"
-                android:textAlignment="center"
-                android:hint="قیمت :تومان"
-                android:layout_width="match_parent"
-                android:layout_height="8mm" />
-
-            <EditText
-                android:textSize="4mm"
-                android:id="@+id/VRoomCnt"
-                android:textAlignment="center"
-                android:hint="تعداد اتاق :نفر"
-                android:layout_width="match_parent"
-                android:layout_height="8mm" />
-            <EditText
-                android:textSize="4mm"
-                android:id="@+id/VCapacity"
-                android:textAlignment="center"
-                android:hint="ظرفیت :نفر"
-                android:layout_width="match_parent"
-                android:layout_height="8mm" />
-
-            <EditText
-                android:text="100"
-                android:textSize="4mm"
-                android:id="@+id/VArea"
-                android:textAlignment="center"
-                android:hint="متراژ :متر"
-                android:layout_width="match_parent"
-                android:layout_height="8mm" />
-            <EditText
-                android:id="@+id/VAdderss"
-                android:textAlignment="center"
-                android:hint="آدرس"
-                android:layout_width="match_parent"
-                android:layout_height="10mm" />
-
-        </LinearLayout>
-        <ImageView
-            android:src="@drawable/sh_line"
-            android:background="#EEE1E1"
-            android:id="@+id/capturedImage"
-            android:layout_weight="0.7"
-            android:layout_width="0mm"
-            android:layout_height="40mm" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/map_InsertVilla"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <EditText
+            android:id="@+id/VCost"
+            android:textAlignment="center"
+            android:hint="قیمت :تومان"
             android:layout_width="match_parent"
-            android:layout_height="15mm"
-            android:scrollbars="vertical" />
+            android:layout_height="0mm"
+            android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/VRoomCnt"
+            android:textAlignment="center"
+            android:hint="تعداد اتاق :نفر"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="0.1"/>
+
+        <EditText
+            android:id="@+id/VCapacity"
+            android:textAlignment="center"
+            android:hint="ظرفیت :نفر"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="0.1"/>
+
+        <EditText
+            android:id="@+id/VArea"
+            android:textAlignment="center"
+            android:hint="متراژ :متر"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="0.1"/>
+        <EditText
+            android:id="@+id/VAdderss"
+            android:textAlignment="center"
+            android:hint="آدرس"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="0.1"/>
     </LinearLayout>
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map_InsertVilla"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:layout_height="0mm"
+        android:layout_weight="5"/>
+
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
-            android:textSize="4mm"
             android:onClick="Onclick_BtnCancle"
-            android:layout_marginLeft="20mm"
             android:text="لغو"
             android:textAlignment="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:layout_width="0mm"
             android:layout_height="wrap_content" />
 
         <Button
-            android:textSize="4mm"
             android:onClick="Onclick_BtnAdd"
-            android:layout_marginLeft="1mm"
             android:text="ثبت"
             android:textAlignment="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:layout_width="0mm"
             android:layout_height="wrap_content" />
 
-
+        <Button
+            android:layout_marginLeft="20mm"
+            android:id="@+id/btnTakePicture"
+            android:text="دوربین"
+            android:layout_width="0mm"
+            android:layout_weight="0.25"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/m_uploadBtn"
+            android:text="آپلود"
+            android:layout_width="0mm"
+            android:layout_weight="0.25"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>
