@@ -49,6 +49,8 @@ dependencies {
 
     implementation 'sun.bob:mcalendarview:1.0.0'
 
+    implementation 'com.zarinpal:purchase:0.0.9'
+
 
 
 }

@@ -3,6 +3,7 @@ package com.absent.villaapp;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,9 @@ import androidx.core.app.NotificationCompat;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
+import com.zarinpal.ewallets.purchase.PaymentRequest;
+import com.zarinpal.ewallets.purchase.ZarinPal;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,7 +39,36 @@ public class UserLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        new DatabaseHelper(this).getReadableDatabase();
 
+//        prepareBuy("1250000");
 
+    }
+    void prepareBuy(String price)
+    {
+//        ZarinPal purchase = ZarinPal.getPurchase(this);
+//        PaymentRequest payment  = ZarinPal.getPaymentRequest();
+//
+//        payment.setMerchantID("71c705f8-bd37-11e6-aa0c-000c295eb8fc");
+//        payment.setAmount(Integer.valueOf(price));
+//        payment.setDescription("خرید اشتراک");
+//        payment.setCallbackURL("app://app");     /* Your App Scheme */
+//        payment.setMobile("09195835135");            /* Optional Parameters */
+//
+//        purchase.startPayment(payment,  new OnCallbackRequestPaymentListener() {
+//            @Override
+//            public void onCallbackResultPaymentRequest(int status, String authority, Uri paymentGatewayUri, Intent intent) {
+//
+//
+//                if (status == 100) {
+//                   /*
+//                   When Status is 100 Open Zarinpal PG on Browser
+//                   */
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "به درگاه متصل نشد :(", Toast.LENGTH_LONG).show();
+//                }
+//
+//            }
+//        });
 
     }
 
