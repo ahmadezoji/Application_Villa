@@ -28,7 +28,7 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".VillaAdapterCustomer" />
         <activity android:name=".MainActivityCustomer" />
-        <activity android:name=".AdminInsertctivity" />
+        <activity android:name=".AdminInsertActivity" />
         <activity android:name=".VillaAdapterAdmin" />
         <activity android:name=".MainActivityAdmin" />
         <activity android:name=".UserLoginActivity">

@@ -30,9 +30,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<Users>users=new ArrayList<>();
             QueryBuilder<Users, Integer> qb = getUserDao().queryBuilder();
             Where where = qb.where();
-            where.eq(Users.USERNAME_FIELD, username);
-            where.and();
-            where.eq(Users.PASSWORD_FIELD, password);
+            where.eq(Users.NAME, username);
             PreparedQuery<Users> preparedQuery = qb.prepare();
             final Iterator<Users>  usersIterator = getUserDao().query(preparedQuery).iterator();
 

@@ -11,24 +11,24 @@
         android:layout_width="match_parent"
         android:padding="10mm">
 
-        <EditText
-            android:textColor="#000"
-            android:layout_margin="1mm"
-            android:padding="1mm"
-            android:textAlignment="center"
-            android:id="@+id/m_name"
-            android:hint="username"
-            android:background="@color/primaryColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+<!--        <EditText-->
+<!--            android:textColor="#000"-->
+<!--            android:layout_margin="1mm"-->
+<!--            android:padding="1mm"-->
+<!--            android:textAlignment="center"-->
+<!--            android:id="@+id/Login_name"-->
+<!--            android:hint="Name"-->
+<!--            android:background="@color/primaryColor"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 
         <EditText
             android:textColor="#000"
             android:layout_margin="1mm"
             android:padding="1mm"
             android:textAlignment="center"
-            android:id="@+id/m_pass"
-            android:hint="pass"
+            android:id="@+id/Login_phone"
+            android:hint="Phone"
             android:background="@color/primaryColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

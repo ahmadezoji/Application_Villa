@@ -73,7 +73,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
         Bundle bundle=intent.getExtras();
         CurrentUser=(Users) bundle.get("user");
         ((TextView)(findViewById(R.id.m_UserName_Customer)))
-                .setText(CurrentUser.getUsername());
+                .setText(CurrentUser.getName());
 
         this.filllist();
     }
@@ -104,7 +104,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                 String api=
                 new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url("http://84.241.1.59:9191/villas/all")
+                                .url("http://127.0.0.1:8080/villas/all")
                         .build()
                 )
                         .execute()
@@ -123,7 +123,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                     villa.setLat(jsonObject.getInt("lat"));
                     villa.setLon(jsonObject.getInt("lon"));
                     villa.setAddress(jsonObject.getString("address"));
-                    villa.setPic(Base64.decode(jsonObject.getString("cover"), Base64.DEFAULT));
+                    villa.setCover(jsonObject.getString("cover"));
                     villa.setCost(jsonObject.getInt("cost"));
                     villa.setAdminUserId(jsonObject.getInt("providerid"));
                     villas.add(villa);

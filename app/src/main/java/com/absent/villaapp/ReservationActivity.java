@@ -32,7 +32,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
     public Users CurrentUser;
     public Villa Currentvilla;
 
-    public static final String BASE_URL = "http://84.241.1.59:9191/";
+    public static final String BASE_URL = "http://127.0.0.1:8080/";
     private APIs apIs;
 
     private static ViewPager mPager;
@@ -50,7 +50,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
         CurrentUser=(Users) bundle.get("user");
         Currentvilla=(Villa) bundle.get("villa");
         ((TextView)(findViewById(R.id.m_Username_Reservation)))
-                .setText(CurrentUser.getUsername());
+                .setText(CurrentUser.getName());
 
 
 
@@ -66,7 +66,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
 
         imageModelArrayList=new ArrayList<>();
 
-        imageModelArrayList.add(Currentvilla.getPic());
+//        imageModelArrayList.add(Currentvilla.getPic());
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
@@ -126,7 +126,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
                                 .getText().toString());
 
                 CustomerReservation reservation=new CustomerReservation(
-                        CurrentUser.getUserId(),Currentvilla.getVillaId(),startdate,reserve_duration );
+                        CurrentUser.getId(),Currentvilla.getVillaId(),startdate,reserve_duration );
 
                 addReservation(reservation);
 

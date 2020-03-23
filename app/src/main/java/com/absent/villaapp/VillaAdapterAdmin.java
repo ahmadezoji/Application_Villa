@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -35,10 +38,11 @@ public class VillaAdapterAdmin extends ArrayAdapter {
         convertView=activity.getLayoutInflater()
                 .inflate(R.layout.activity_villa_adapter_admin,null);
 
-        Bitmap bitmap=villa.getPic();
-        if (bitmap!=null) {
-            ((ImageView) (convertView.findViewById(R.id.m_adapter_img)))
-                    .setImageBitmap(villa.getPic());
+        ImageView cover=(ImageView)(convertView.findViewById(R.id.m_adapter_img));
+
+        if (!villa.getCover().isEmpty()) {
+
+            Glide.with(activity).load(villa.getCover()).into(cover);
         }
 
         ((TextView)(convertView.findViewById(R.id.m_adapter_Cost)))

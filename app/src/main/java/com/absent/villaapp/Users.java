@@ -9,63 +9,58 @@ import java.io.Serializable;
 
 @DatabaseTable
 public class Users implements Serializable {
-    public static final String ID = "userId";
-    public static final String USERNAME_FIELD = "username";
-    public static final String PASSWORD_FIELD = "password";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String PHONE = "phone";
 
     @DatabaseField(generatedId = true,canBeNull = false)
-    private int userId;
+    private int id;
     @DatabaseField(canBeNull = false)
-    private String username;
+    private String name;
     @DatabaseField(canBeNull = false)
-    private String password;
+    private String phone;
     @DatabaseField
-    private  String phone;
-    @DatabaseField
-    private int type;
+    private Integer type;
 
-
-    public Users()
-    {
-
+    public Users() {
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phone = phoneNumber;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setType(int type) {
+    public Users(int id, String name, String phone, Integer type) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
         this.type = type;
     }
 
-    public String getPassword() {
-        return password;
+    public int getId() {
+        return id;
     }
-    public String getPhoneNumber() {
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
         return phone;
     }
 
-    public String getUsername() {
-        return username;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public int getUserId() {
-        return userId;
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

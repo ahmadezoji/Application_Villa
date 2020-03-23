@@ -32,23 +32,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity implements Ownerstate{
-    public static final String BASE_URL = "http://84.241.1.59:9191/";
+    public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
     private int AutenticatKey;
     Users currentuser;
+
+    public UserCotroller usercontroller;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apIs = retrofit.create(APIs.class);
-
+        usercontroller=new UserCotroller();
     }
     public void onclick_btnSignup(View view)
     {
@@ -58,54 +54,29 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
         ((EditText)(findViewById(R.id.m_usernameSignUP)))
                 .getText().toString();
 
-        String password=
-                ((EditText)(findViewById(R.id.m_passwordSignUP)))
-                        .getText().toString();
+//        String password=
+//                ((EditText)(findViewById(R.id.m_passwordSignUP)))
+//                        .getText().toString();
 
         String phonenumber=
                 ((EditText)(findViewById(R.id.m_phonSignUP)))
                         .getText().toString();
 
-        currentuser.setUsername(username);
-        currentuser.setPassword(password);
-        currentuser.setPhoneNumber(phonenumber);
+        currentuser.setName(username);
+        currentuser.setPhone(phonenumber);
         currentuser.setType(1);
 
 
-        IsExist(phonenumber);
+        if(usercontroller.IsExist(phonenumber))
+        {
+            AutenticatKey = getAutenticateKey();
+            SendAutenticatKeyToPhone(AutenticatKey);
+        }
 
 
 
     }
-   public void IsExist(String phone)
-   {
-        Call<List<Users>> call=apIs.getuserBYphone(phone);
-        call.enqueue(new Callback<List<Users>>() {
-            @Override
-            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
-                if (response.isSuccessful())
-                {
-                    List<Users> users=response.body();
-                    if (users.size()==0)
-                    {
-                        AutenticatKey = getAutenticateKey();
-                        SendAutenticatKeyToPhone(AutenticatKey);
-                    }
-                    else
-                        Toast.makeText(SignUpActivity.this, "This Phone Number Registered Later !!", Toast.LENGTH_LONG).show();
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Users>> call, Throwable t) {
-
-            }
-        });
-
-   }
-    public class SendKeytoPhoneTask extends AsyncTask<String,Object,Integer>
+       public class SendKeytoPhoneTask extends AsyncTask<String,Object,Integer>
     {
         @Override
         protected void onPostExecute(Integer integer) {
@@ -149,25 +120,6 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
 
     private void Addusers(Users users)
     {
-        Call<List<Users>> call=apIs.createuser(users);
-        call.enqueue(new Callback<List<Users>>() {
-            @Override
-            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
-                List<Users> list=new ArrayList<>();
-                list=response.body();
-                if (list!=null) {
-                    Toast.makeText(SignUpActivity.this, "ثبت نام با موفقیت بود  !!", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(SignUpActivity.this, "ثبت نام ناموفق بود  !!", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Users>> call, Throwable t) {
-                Log.d("","Error");
-            }
-        });
 
     }
 
@@ -188,7 +140,10 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
     }
     @Override
     public void checkAutenticateUser() {
-        Addusers(currentuser);
+        if(usercontroller.AddUser(currentuser))
+            Toast.makeText(this, "User sign up success !!", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "User sign up error !", Toast.LENGTH_SHORT).show();
     }
 
     @Override

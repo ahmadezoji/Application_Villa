@@ -1,27 +1,17 @@
 package com.absent.villaapp;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.icu.text.SimpleDateFormat;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,9 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,66 +32,57 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.viewpagerindicator.CirclePageIndicator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
-import okio.BufferedSink;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AdminInsertctivity extends AppCompatActivity implements LocationListener {
+public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
+
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
-    private Bitmap villaimgBMP = null;
 
-    private String mCurrentPhotoPath;
+    private Bitmap coverBmp = null;
 
+
+    EditText title;
+    EditText cost;
+    EditText room_count;
+    EditText capacity;
+    EditText area;
+    EditText address;
+
+    TextView UserName;
+    ImageView cover;
+    LatLng villa_latLng;
+
+    private VillaController villaController;
 
     private static final int GALLERY_PICTURE = 20;
     private static final int TAKE_PICTURE = 1;
-    private Uri imageUri;
-//    public static final int RESULT_GALLERY = -1;
-    private int index_pic=0;
+
     private GoogleMap mMap;
-    LatLng villa_latLng;
-    public static final String BASE_URL = "http://84.241.1.59:9191/";
+
+    public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
-    private static ViewPager mPager;
-    private static int currentPage = 0;
-    private static int NUM_PAGES = 0;
-    private ArrayList<Bitmap> imageModelArrayList;
     LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_insert);
+        cast();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         CurrentUser = (Users) bundle.get("user");
-//        ((TextView) (findViewById(R.id.m_Username_ShowVilla)))
-//                .setText(CurrentUser.getUsername());
 
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apIs = retrofit.create(APIs.class);
+        villaController = new VillaController();
 
 
         locationManager = (LocationManager)
@@ -175,22 +154,8 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         });
     }
 
-    public void OnclickePic1_AdminInsert(View view)
+    public void Onclick_addpic(View view)
     {
-        index_pic=1;
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, GALLERY_PICTURE);
-
-    }
-    public void OnclickePic2_AdminInsert(View view)
-    {
-        index_pic=2;
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, GALLERY_PICTURE);
-    }
-    public void OnclickePic3_AdminInsert(View view)
-    {
-        index_pic=3;
         Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, GALLERY_PICTURE);
     }
@@ -205,90 +170,41 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
             }
         }
     }
-    private void AddVilla(final Villa villa)
+
+
+    private void cast()
     {
-        Call<List<Villa>> call= apIs.createvillas(villa);
-        call.enqueue(new Callback<List<Villa>>() {
-            @Override
-            public void onResponse( Call<List<Villa>> call, Response<List<Villa>> response) {
-                if (response.isSuccessful())
-                {
-                    List<Villa> villas= new ArrayList<>();
-                    villas=response.body();
-                    if (villas!=null)
-                    {
-                        Toast.makeText(AdminInsertctivity.this,"ثبت نام با موفقیت بود  !!",Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(AdminInsertctivity.this, "ثبت نام ناموفق بود  !!", Toast.LENGTH_LONG).show();
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Villa>> call, Throwable t) {
-
-            }
-        });
-
+        title=(EditText)(findViewById(R.id.VTitle));
+        cost=(EditText)(findViewById(R.id.VCost));
+        room_count=(EditText)(findViewById(R.id.VRoomCnt));
+        capacity=(EditText)(findViewById(R.id.VCapacity));
+        area=(EditText)(findViewById(R.id.VArea));
+        address=(EditText)(findViewById(R.id.VAdderss));
+        cover =(ImageView)findViewById(R.id.adminInsert_cover);
     }
-
     public void Onclick_BtnAdd(View view)
     {
         try{
-                Villa villa=new Villa();
 
+            Villa villa=new Villa();
 
-                EditText VTitle=(EditText)(findViewById(R.id.VTitle));
-                EditText VCost=(EditText)(findViewById(R.id.VCost));
-                EditText VRoomCnt=(EditText)(findViewById(R.id.VRoomCnt));
-                EditText VCapacity=(EditText)(findViewById(R.id.VCapacity));
-                EditText VArea=(EditText)(findViewById(R.id.VArea));
-                EditText VAdderss=(EditText)(findViewById(R.id.VAdderss));
-                ImageView imageView =(ImageView)findViewById(R.id.pic1_InsertVilla);
-//                ImageView imageView= imageModelArrayList.get(0);
+            villa.setTitle(title.getText().toString());
+            villa.setAddress(address.getText().toString());
+            villa.setLat((float)villa_latLng.latitude);
+            villa.setLon((float)villa_latLng.longitude);
+            villa.setCost(Integer.valueOf(cost.getText().toString()));
+            villa.setRoomCount(Integer.valueOf(room_count.getText().toString()));
+            villa.setCapacity(Integer.valueOf(capacity.getText().toString()));
+            villa.setArea(Integer.valueOf(area.getText().toString()));
+            villa.setCover(UploadCoverToServer(coverBmp));
+            villa.setAdminUserId(CurrentUser.getId());
 
-                villa.setTitle(VTitle.getText().toString());
-                villa.setCost(Integer.valueOf(VCost.getText().toString()));
-                villa.setRoomCount(Integer.valueOf(VRoomCnt.getText().toString()));
-                villa.setCapacity(Integer.valueOf(VCapacity.getText().toString()));
-                villa.setAddress(VAdderss.getText().toString());
+            if(villaController.AddVilla(villa))
+                Toast.makeText(this,"Insert Success !",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
 
-
-
-                villa.setLat((float)villa_latLng.latitude);
-                villa.setLon((float)villa_latLng.longitude);
-
-//                villa.setLat((float)52.2);
-//                villa.setLon((float)60.1);
-
-
-                villa.setAdminUserId(CurrentUser.getUserId());
-
-
-//            villaimgBMP = BitmapFactory.decodeResource(getResources(), R.drawable.index1);
-            if (villaimgBMP!=null) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArrayimg = stream.toByteArray();
-                villa.setPic(byteArrayimg);
-            }
-            else {
-                villa.setPic(null);
-            }
-
-
-            AddVilla(villa);
-
-            VTitle.setText("");
-            VCost.setText("");
-            VRoomCnt.setText("");
-            VCapacity.setText("");
-            VArea.setText("");
-            VAdderss.setText("");
-//            imageView.setImageBitmap(null);
+            Control_Default();
 
 
         }
@@ -296,6 +212,19 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
         {
             Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
         }
+    }
+    private String UploadCoverToServer(Bitmap bitmap)
+    {
+        return "";
+    }
+    private void Control_Default()
+    {
+        title.setText("");
+        cost.setText("");
+        room_count.setText("");
+        capacity.setText("");
+        area.setText("");
+        address.setText("");
     }
     public void Onclick_BtnCancle(View view) {
 
@@ -312,37 +241,14 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
 
             if (requestCode == TAKE_PICTURE) {
                 Bitmap photo = (Bitmap)data.getExtras().get("data");
-                ImageView imgCapture=null;
-                if (index_pic == 1) {
-                    imgCapture = (ImageView) findViewById(R.id.pic1_InsertVilla);
-                }
-                else  if (index_pic == 2) {
-                    imgCapture = (ImageView) findViewById(R.id.pic2_InsertVilla);
-                }
-                else  if (index_pic == 3) {
-                    imgCapture = (ImageView) findViewById(R.id.pic3_InsertVilla);
-                }
-                imgCapture.setImageBitmap(photo);
-                villaimgBMP=photo;
-
-
+                cover.setImageBitmap(photo);
+                coverBmp =photo;
 
             } else if (requestCode == GALLERY_PICTURE) {
                 try{
                     Uri imageUri = data.getData();
-                    ImageView imageView=null;// = (ImageView) findViewById(R.id.capturedImage);
-                    if (index_pic == 1) {
-                        imageView = (ImageView) findViewById(R.id.pic1_InsertVilla);
-                    }
-                    else  if (index_pic == 2) {
-                        imageView = (ImageView) findViewById(R.id.pic2_InsertVilla);
-                    }
-                    else  if (index_pic == 3) {
-                        imageView = (ImageView) findViewById(R.id.pic3_InsertVilla);
-                    }
-                    villaimgBMP = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                    imageView.setImageURI(imageUri);
-
+                    coverBmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    cover.setImageURI(imageUri);
                 }
                 catch (Exception e)
                 {
@@ -355,10 +261,6 @@ public class AdminInsertctivity extends AppCompatActivity implements LocationLis
 
     }
 
-    //
-    //
-    /* Get Current Location CallBack*/
-    //
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("","");

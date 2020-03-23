@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyViewHolder> {
@@ -24,11 +26,11 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
-        TextView cost;
-        ImageView imageViewIcon;
-        Button Btn_Edit;
-        Button Btn_Del;
+        public TextView title;
+        public TextView cost;
+        public ImageView imageViewIcon;
+        public Button Btn_Edit;
+        public Button Btn_Del;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -70,11 +72,13 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
 
         title.setText(dataSet.get(listPosition).getAddress());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
-        if (dataSet.get(listPosition).getPic_byte().length!=0) {
-            imageViewIcon.setVisibility(View.VISIBLE);
-            imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
 
-        }
+
+//        if (dataSet.get(listPosition).getCover()!=null) {
+//
+//            Glide.with(context).load(dataSet.get(listPosition).getCover()).into(holder.imageViewIcon);
+//        }
+
 
         btn_Edit.setOnClickListener(new View.OnClickListener() {
             @Override

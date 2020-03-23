@@ -30,18 +30,30 @@ public class Villa implements Serializable {
     private int capacity;
     @DatabaseField
     private int area;
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] cover;
+    @DatabaseField
+    private String cover;
+    @DatabaseField
+    private Integer galleryid;
     @DatabaseField
     private int providerid;
-
-
-
-
 
     public Villa()
     {
 
+    }
+    public Integer getGalleryid() {
+        return galleryid;
+    }
+
+    public void setGalleryid(Integer galleryid) {
+        this.galleryid = galleryid;
+    }
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public void setVillaId(int villaId) {
@@ -66,10 +78,6 @@ public class Villa implements Serializable {
 
     public void setRoomCount(int roomCount) {
         this.roomcnt = roomCount;
-    }
-
-    public void setPic(byte[] pic) {
-        this.cover = pic;
     }
 
     public void setCost(int cost) {
@@ -112,12 +120,6 @@ public class Villa implements Serializable {
         return roomcnt;
     }
 
-    public Bitmap getPic() {
-        return BitmapFactory.decodeByteArray(cover,0,cover.length);
-    }
-    public byte[] getPic_byte() {
-        return cover;
-    }
 
     public String getAddress() {
         return address;

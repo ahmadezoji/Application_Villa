@@ -75,7 +75,7 @@ public class Edit_Dialog extends DialogFragment {
         Capacity.setText(String.valueOf(villa.getCapacity()));
         area.setText(String.valueOf(villa.getArea()));
 
-        ((ImageView)(view.findViewById(R.id.img_villa_editDlg))).setImageBitmap(villa.getPic());
+//        ((ImageView)(view.findViewById(R.id.img_villa_editDlg))).setImageBitmap(villa.getPic());
 
         ((Button)(view.findViewById(R.id.btn_upload_editDlg)))
                 .setOnClickListener(new View.OnClickListener() {
@@ -113,14 +113,14 @@ public class Edit_Dialog extends DialogFragment {
                 villa_edited.setCapacity(Integer.valueOf(Capacity.getText().toString()));
                 villa_edited.setArea(Integer.valueOf(area.getText().toString()));
 
-                /*for image */
-                if (villaimgBMP != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    villa_edited.setPic(stream.toByteArray());
-                }
-                else
-                    villa_edited.setPic(null);
+//                /*for image */
+//                if (villaimgBMP != null) {
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    villa_edited.setPic(stream.toByteArray());
+//                }
+//                else
+//                    villa_edited.setPic(null);
                 /*------------------------------------------------*/
 
 

@@ -12,36 +12,14 @@
 
       <ImageView
           android:scaleType="fitXY"
-          android:onClick="OnclickePic1_AdminInsert"
-          android:id="@+id/pic1_InsertVilla"
-          android:background="@drawable/ic_launcher_background"
+          android:id="@+id/adminInsert_cover"
+          android:onClick="Onclick_addpic"
+          android:background="@drawable/profile_notify"
           android:layout_weight="0.2"
           android:layout_width="0mm"
           android:layout_height="match_parent"/>
-        <ImageView
-            android:scaleType="fitXY"
-            android:onClick="OnclickePic2_AdminInsert"
-            android:id="@+id/pic2_InsertVilla"
-            android:background="@drawable/ic_launcher_background"
-            android:layout_weight="0.2"
-            android:layout_width="0mm"
-            android:layout_height="match_parent"/>
-        <ImageView
-            android:scaleType="fitXY"
-            android:onClick="OnclickePic3_AdminInsert"
-            android:id="@+id/pic3_InsertVilla"
-            android:background="@drawable/ic_launcher_background"
-            android:layout_weight="0.2"
-            android:layout_width="0mm"
-            android:layout_height="match_parent"/>
+
     </LinearLayout>
-<!--        <ImageView-->
-<!--            android:src="@drawable/sh_line"-->
-<!--            android:background="#EEE1E1"-->
-<!--            android:id="@+id/capturedImage"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0mm"-->
-<!--            android:layout_weight="5"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"

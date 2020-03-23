@@ -35,11 +35,11 @@ public class VillaAdapterCustomer extends ArrayAdapter {
         convertView=activity.getLayoutInflater()
                 .inflate(R.layout.activity_villa_adapter_customer,null);
 
-        Bitmap bitmap=villa.getPic();
-        if (bitmap!=null) {
-            ((ImageView) (convertView.findViewById(R.id.m_adapter_img_Customer)))
-                    .setImageBitmap(villa.getPic());
-        }
+//        Bitmap bitmap=villa.getPic();
+//        if (bitmap!=null) {
+//            ((ImageView) (convertView.findViewById(R.id.m_adapter_img_Customer)))
+//                    .setImageBitmap(villa.getPic());
+//        }
 
         ((TextView)(convertView.findViewById(R.id.m_adapter_Cost_Customer)))
                 .setText(String.valueOf(villa.getCost()));
