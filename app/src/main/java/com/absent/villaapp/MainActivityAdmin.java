@@ -58,7 +58,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
 
 
-        this.filllist();
+//        this.filllist();
     }
 
 

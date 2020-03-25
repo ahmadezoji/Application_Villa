@@ -19,11 +19,12 @@ import com.absent.villaapp.Users;
 import com.absent.villaapp.Villa;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustomer.MyViewHolder> {
     private Users currentuser;
     private Context context;
-    private ArrayList<Villa> dataSet;
+    private List<Villa> dataSet;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,7 +41,7 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
         }
     }
 
-    public CardAdapterCustomer(ArrayList<Villa> data, Context context, Users currentuser) {
+    public CardAdapterCustomer(List<Villa> data, Context context, Users currentuser) {
         this.currentuser=currentuser;
         this.context=context;
         this.dataSet = data;

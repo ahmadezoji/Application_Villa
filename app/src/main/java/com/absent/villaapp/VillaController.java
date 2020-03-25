@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VillaController {
 
@@ -137,5 +138,58 @@ public class VillaController {
             }
         }
 
+    }
+    public List<Villa> getAllVilles()
+    {
+        try {
+            return new GetAllVillasTask().execute().get();
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+    public class GetAllVillasTask extends AsyncTask<Object,Object, ArrayList<Villa>>
+    {
+        @Override
+        protected ArrayList<Villa> doInBackground(Object... objects) {
+            try {
+
+                ArrayList<Villa> villas=new ArrayList<>();
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(BASE_URL+"villas/all")
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+                /*Call back Fill list IF SUCCESS*/
+                JSONArray jsonArray=new JSONArray(strApi);
+                for (int i=0;i<jsonArray.length();i++) {
+                    Villa villa=new Villa();
+                    JSONObject jsonObject =jsonArray.getJSONObject(i);
+                    villa.setVillaId(jsonObject.getInt("id"));
+                    villa.setTitle(jsonObject.getString("title"));
+                    villa.setRoomCount(jsonObject.getInt("roomcnt"));
+                    villa.setCapacity(jsonObject.getInt("capacity"));
+                    villa.setLat(jsonObject.getInt("lat"));
+                    villa.setLon(jsonObject.getInt("lon"));
+                    villa.setAddress(jsonObject.getString("address"));
+                    villa.setCover(jsonObject.getString("cover"));
+                    villa.setCost(jsonObject.getInt("cost"));
+                    villa.setGalleryid(jsonObject.getInt("galleryid"));
+                    villa.setAdminUserId(jsonObject.getInt("providerid"));
+                    villas.add(villa);
+
+                }
+
+
+
+                return villas;
+            }
+            catch (Exception e) {
+                return null;
+            }
+        }
     }
 }

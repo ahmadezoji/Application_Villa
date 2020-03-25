@@ -2,13 +2,16 @@ package com.absent.villaapp;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,7 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,26 +34,33 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
 
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
+    private UploadServer uploadServer;
 
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
 
     private Bitmap coverBmp = null;
+    private Uri coverUri = null
+            ;
+    //storage permission code
+    private static final int STORAGE_PERMISSION_CODE = 123;
+    //Image request code
+    private int PICK_IMAGE_REQUEST = 1;
+
+
+    //Uri to store the image uri
+    private Uri filePath;
 
 
     EditText title;
@@ -76,6 +89,9 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_insert);
+
+        uploadServer = new UploadServer();
+        uploadServer.setContext(this);
         cast();
 
         Intent intent = getIntent();
@@ -132,8 +148,7 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                 startActivityForResult(intent, GALLERY_PICTURE);
+                showFileChooser();
 
             }
         });
@@ -145,10 +160,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                File photo = new File(Environment.getExternalStorageDirectory(),  "Pic.jpg");
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT,
-//                        Uri.fromFile(photo));
-//                imageUri = Uri.fromFile(photo);
                 startActivityForResult(intent, TAKE_PICTURE);
             }
         });
@@ -159,18 +170,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, GALLERY_PICTURE);
     }
-
-    @Override
-    public void onRequestPermissionsResult(final int requestCode,final String[] permissions,final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 123) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            } else {
-                Toast.makeText(this, "You didn't give permission to access device location", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
 
     private void cast()
     {
@@ -196,27 +195,34 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
             villa.setRoomCount(Integer.valueOf(room_count.getText().toString()));
             villa.setCapacity(Integer.valueOf(capacity.getText().toString()));
             villa.setArea(Integer.valueOf(area.getText().toString()));
-            villa.setCover(UploadCoverToServer(coverBmp));
+            villa.setCover(UploadCoverToServer(coverUri));
             villa.setAdminUserId(CurrentUser.getId());
 
-            if(villaController.AddVilla(villa))
-                Toast.makeText(this,"Insert Success !",Toast.LENGTH_LONG).show();
+            if(villaController.AddVilla(villa)) {
+                Toast.makeText(this, "Insert Success !", Toast.LENGTH_LONG).show();
+            }
             else
                 Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
 
             Control_Default();
 
-
+            UploadCoverToServer(coverUri);
         }
         catch (Exception e)
         {
             Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
         }
     }
-    private String UploadCoverToServer(Bitmap bitmap)
+    private String UploadCoverToServer(Uri uri)
     {
-        return "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PackageInfo.REQUESTED_PERMISSION_GRANTED);
+        }
+        return uploadServer.uploadImage(uri);
     }
+
     private void Control_Default()
     {
         title.setText("");
@@ -239,14 +245,21 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
 
-            if (requestCode == TAKE_PICTURE) {
-                Bitmap photo = (Bitmap)data.getExtras().get("data");
-                cover.setImageBitmap(photo);
-                coverBmp =photo;
+            if (requestCode == PICK_IMAGE_REQUEST  && data != null && data.getData() != null) {
+                filePath = data.getData();
+                try {
+                    coverUri=filePath;
+                    coverBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    cover.setImageBitmap(coverBmp);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             } else if (requestCode == GALLERY_PICTURE) {
                 try{
                     Uri imageUri = data.getData();
+                    coverUri = imageUri;
                     coverBmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                     cover.setImageURI(imageUri);
                 }
@@ -260,7 +273,13 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
 
     }
-
+    //method to show file chooser
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("","");
@@ -281,6 +300,39 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("","");
+    }
+
+    //Requesting permission
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
+
+    //This method will be called when the user will tap on allow or deny
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        //Checking the request code of our request
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+                Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }
