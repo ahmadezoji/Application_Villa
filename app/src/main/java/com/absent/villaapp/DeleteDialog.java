@@ -40,7 +40,7 @@ public class DeleteDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 //                        new DatabaseHelper(context).deleteVilla(villa);
-                        villaListOwner.deleteVilla(villa.getVillaId());
+                        villaListOwner.deleteVilla(villa);
 
 
                     }

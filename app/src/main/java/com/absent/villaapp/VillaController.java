@@ -1,6 +1,7 @@
 package com.absent.villaapp;
 
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -189,6 +190,82 @@ public class VillaController {
             }
             catch (Exception e) {
                 return null;
+            }
+        }
+    }
+    public boolean EditVilla(Villa villa)
+    {
+        try {
+            return new EditVillaTask().execute(villa).get();
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
+    }
+    private class EditVillaTask extends AsyncTask<Villa,Object,Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(Villa... villas) {
+            try {
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody userBody = RequestBody.create(JSON,getJson_villa(villas[0]).toString());
+
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(BASE_URL)
+                                .post(userBody)
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+                if (strApi.contains("true"))
+                    return true;
+                else return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+    }
+    public boolean DeleteVilla(Villa villa)
+    {
+        try {
+            return new DeleteVillaTask().execute(villa).get();
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+    private class DeleteVillaTask extends AsyncTask<Villa,Object,Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(Villa... villas) {
+            try {
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody userBody = RequestBody.create(JSON,getJson_villa(villas[0]).toString());
+
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(BASE_URL)
+                                .post(userBody)
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+                if (strApi.contains("true"))
+                    return true;
+                else return false;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
     }

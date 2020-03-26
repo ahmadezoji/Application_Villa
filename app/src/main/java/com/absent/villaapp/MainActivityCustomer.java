@@ -122,15 +122,19 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
     }
 
     @Override
-    public void deleteVilla(int id) {
+    public void deleteVilla(Villa villa) {
 
     }
-
     @Override
     public void editVilla(Villa villa) {
 
     }
-
+    public void Customer_logout(View view)
+    {
+        Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,"");
+        Intent intent=new Intent(this, UserLoginActivity.class);
+        startActivity(intent);
+    }
 
     public class GetVillasTaskCustomer extends AsyncTask<Object,Object,ArrayList<Villa>>{
         @Override

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,6 +41,16 @@ public class UserLoginActivity extends AppCompatActivity {
 //        new DatabaseHelper(this).getReadableDatabase();
         usercontroller=new UserCotroller();
 
+        String phone = Utils.readPrefrences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY);
+        if(!TextUtils.isEmpty(phone))
+        {
+            Users user=usercontroller.getUser(phone);
+            if(user!=null)
+            {
+                goForward(user);
+            }
+        }
+
     }
     public void onclick_btnSignup_Show(View view)
     {
@@ -48,24 +59,28 @@ public class UserLoginActivity extends AppCompatActivity {
     }
     public void onclick_btn(View view)
     {
-//        EditText uname=
-//                ((EditText)(findViewById(R.id.m_name)));
+
         EditText phone =
                 ((EditText)(findViewById(R.id.Login_phone)));
 
         Users user=usercontroller.getUser(phone.getText().toString());
         if(user!=null)
         {
-            Intent intent;
-            if(user.getType() == 0)//Customer
-                intent = new Intent(UserLoginActivity.this, MainActivityAdmin.class);
-
-            else
-                intent = new Intent(UserLoginActivity.this, MainActivityCustomer.class);
-
-            intent.putExtra("user",user);
-            startActivity(intent);
+            goForward(user);
         }
 
+    }
+    private void goForward(Users user)
+    {
+        Intent intent;
+        if(user.getType() == 0)//Customer
+            intent = new Intent(UserLoginActivity.this, MainActivityAdmin.class);
+        else
+            intent = new Intent(UserLoginActivity.this, MainActivityCustomer.class);
+
+        Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,user.getPhone());
+
+        intent.putExtra("user",user);
+        startActivity(intent);
     }
 }

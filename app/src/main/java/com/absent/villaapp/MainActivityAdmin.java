@@ -33,7 +33,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
-    public static final String BASE_URL = "http://127.0.0.1:8080/";
+    public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
     public Users CurrentUser;
     @Override
@@ -55,14 +55,8 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                 .build();
 
         apIs = retrofit.create(APIs.class);
-
-
-
-//        this.filllist();
+        filllist();
     }
-
-
-
     @Override
     public void filllist() {
         ArrayList<Villa> villas = villaController.GetAdminVilla(CurrentUser.getId());
@@ -79,56 +73,16 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     }
 
     @Override
-    public void deleteVilla(int id) {
-
-        Call<Boolean> call= apIs.deleteVilla(id);
-        call.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.isSuccessful())
-                {
-                    boolean btrue=response.body();
-                    if (btrue)
-                    {
-                        Toast.makeText(MainActivityAdmin.this,"Deleted",Toast.LENGTH_SHORT).show();
-                        filllist();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-
-            }
-        });
-
+    public void deleteVilla(Villa villa) {
+        villaController.EditVilla(villa);
     }
-
     @Override
     public void editVilla(Villa villa) {
-       Call<Boolean> call=apIs.updateVilla(villa);
-       call.enqueue(new Callback<Boolean>() {
-           @Override
-           public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-               if(response.isSuccessful())
-               {
-                   Boolean btrue=response.body();
-                   if (btrue)
-                   {
-                       Toast.makeText(MainActivityAdmin.this,"Updated",Toast.LENGTH_SHORT).show();
-                       filllist();
-                   }
-               }
-           }
-
-           @Override
-           public void onFailure(Call<Boolean> call, Throwable t) {
-
-           }
-       });
+        villaController.EditVilla(villa);
     }
     public void OnUser_Click(View view)
     {
+        Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,"");
         Intent intent=new Intent(this, UserLoginActivity.class);
         startActivity(intent);
     }
