@@ -215,7 +215,7 @@ public class VillaController {
 
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL)
+                                .url(BASE_URL+"villas/update")
                                 .post(userBody)
                                 .build()
                 )

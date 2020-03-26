@@ -1,13 +1,20 @@
 package com.absent.villaapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +36,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivityAdmin extends AppCompatActivity implements VillaListOwner{
 
     private VillaController villaController;
+    private UploadServer uploadServer;
+
 
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -48,6 +57,8 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                 .setText(CurrentUser.getName());
 
         villaController = new VillaController();
+        uploadServer = new UploadServer();
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -80,6 +91,17 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     public void editVilla(Villa villa) {
         villaController.EditVilla(villa);
     }
+
+    @Override
+    public String UploadCoverToServer(Uri uri) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PackageInfo.REQUESTED_PERMISSION_GRANTED);
+        }
+        return uploadServer.uploadImage(uri);
+    }
+
     public void OnUser_Click(View view)
     {
         Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,"");

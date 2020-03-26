@@ -70,7 +70,7 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
         Button btn_Edit = holder.Btn_Edit;
         Button btn_Del = holder.Btn_Del;
 
-        title.setText(dataSet.get(listPosition).getAddress());
+        title.setText(dataSet.get(listPosition).getTitle());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
 
 

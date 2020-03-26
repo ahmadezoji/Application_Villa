@@ -196,6 +196,7 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
             villa.setCapacity(Integer.valueOf(capacity.getText().toString()));
             villa.setArea(Integer.valueOf(area.getText().toString()));
             villa.setCover(UploadCoverToServer(coverUri));
+            villa.setGalleryid(null);
             villa.setAdminUserId(CurrentUser.getId());
 
             if(villaController.AddVilla(villa)) {
@@ -205,8 +206,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
 
             Control_Default();
-
-            UploadCoverToServer(coverUri);
         }
         catch (Exception e)
         {

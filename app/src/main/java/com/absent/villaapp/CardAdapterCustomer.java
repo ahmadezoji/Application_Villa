@@ -66,7 +66,7 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
         ImageView imageViewIcon = holder.imageViewIcon;
 
 
-        title.setText(dataSet.get(listPosition).getAddress());
+        title.setText(dataSet.get(listPosition).getTitle());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
 //        if (dataSet.get(listPosition).getPic_byte().length!=0) {
 //            imageViewIcon.setVisibility(View.VISIBLE);

@@ -1,6 +1,7 @@
 package com.absent.villaapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
@@ -129,6 +130,12 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
     public void editVilla(Villa villa) {
 
     }
+
+    @Override
+    public String UploadCoverToServer(Uri uri) {
+        return null;
+    }
+
     public void Customer_logout(View view)
     {
         Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,"");

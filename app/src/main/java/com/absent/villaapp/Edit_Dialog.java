@@ -20,14 +20,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class Edit_Dialog extends DialogFragment {
     private Context context;
+
     private Villa villa;
     private VillaListOwner villaListOwner;
-    private Bitmap villaimgBMP = null;
-    private static final int GALLERY_PICTURE = 1;
+
+    private Bitmap coverBmp = null;
+    private Uri coverUri = null;
+
+    private int PICK_IMAGE_REQUEST = 1;
     private static final int CAMERA_REQUEST = 0;
     private static final int RESULT_OK = -1;
 
@@ -39,6 +46,7 @@ public class Edit_Dialog extends DialogFragment {
     private EditText roomcount ;
     private EditText Capacity;
     private EditText area;
+    private ImageView imageView_villa;
 
     public void setVillaListOwner(VillaListOwner villaListOwner) {
         this.villaListOwner = villaListOwner;
@@ -51,7 +59,12 @@ public class Edit_Dialog extends DialogFragment {
     public void setContext(Context context) {
         this.context = context;
     }
-
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
@@ -65,6 +78,8 @@ public class Edit_Dialog extends DialogFragment {
        roomcount =view.findViewById(R.id.txt_roomcnt_editDlg);
        Capacity=view.findViewById(R.id.txt_Capacity_editDlg);
        area=view.findViewById(R.id.txt_area_editDlg);
+       imageView_villa =(ImageView)view.findViewById(R.id.img_villa_editDlg);
+
 
         title.setText(villa.getTitle());
         address.setText(villa.getAddress());
@@ -74,15 +89,13 @@ public class Edit_Dialog extends DialogFragment {
         roomcount.setText(String.valueOf(villa.getRoomCount()));
         Capacity.setText(String.valueOf(villa.getCapacity()));
         area.setText(String.valueOf(villa.getArea()));
-
-//        ((ImageView)(view.findViewById(R.id.img_villa_editDlg))).setImageBitmap(villa.getPic());
+        Glide.with(context).load(villa.getCover()).into(imageView_villa);
 
         ((Button)(view.findViewById(R.id.btn_upload_editDlg)))
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, GALLERY_PICTURE);
+                       showFileChooser();
                     }
                 });
 
@@ -103,7 +116,10 @@ public class Edit_Dialog extends DialogFragment {
 
                 villa_edited.setVillaId(villa.getVillaId());
                 villa_edited.setAdminUserId(villa.getAdminUserId());
+                villa_edited.setGalleryid(villa.getGalleryid());
+                villa_edited.setCover(villa.getCover());
 
+                /*Edited*/
                 villa_edited.setTitle(title.getText().toString());
                 villa_edited.setAddress(address.getText().toString());
                 villa_edited.setLat(Float.valueOf(lat.getText().toString()));
@@ -112,19 +128,9 @@ public class Edit_Dialog extends DialogFragment {
                 villa_edited.setRoomCount(Integer.valueOf(roomcount.getText().toString()));
                 villa_edited.setCapacity(Integer.valueOf(Capacity.getText().toString()));
                 villa_edited.setArea(Integer.valueOf(area.getText().toString()));
+//                villa_edited.setCover(((VillaListOwner)context).UploadCoverToServer(coverUri));
 
-//                /*for image */
-//                if (villaimgBMP != null) {
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    villaimgBMP.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    villa_edited.setPic(stream.toByteArray());
-//                }
-//                else
-//                    villa_edited.setPic(null);
                 /*------------------------------------------------*/
-
-
-
 
                 ((VillaListOwner)context).editVilla(villa_edited);
 
@@ -145,21 +151,15 @@ public class Edit_Dialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK)
         {
-            if(resultCode==CAMERA_REQUEST)
-            {
-                villaimgBMP = (Bitmap)data.getExtras().get("data");
+            if (requestCode == PICK_IMAGE_REQUEST  && data != null && data.getData() != null) {
+                try {
+                    coverUri=data.getData();
+                    coverBmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(), coverUri);
+//                    cover.setImageBitmap(coverBmp);
 
-            }
-            else if(resultCode==GALLERY_PICTURE)
-            {
-//                Uri selectedImage = data.getData();
-//                String[] filePath = { MediaStore.Images.Media.DATA };
-//                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-//                c.moveToFirst();
-//                int columnIndex = c.getColumnIndex(filePath[0]);
-//                String picturePath = c.getString(columnIndex);
-//                c.close();
-//                villaimgBMP= (BitmapFactory.decodeFile(picturePath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
