@@ -27,8 +27,8 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="2"
-                android:tag="image_tag" />
-
+                />
+<!--            android:tag="image_tag"-->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

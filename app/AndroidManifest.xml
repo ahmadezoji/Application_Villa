@@ -20,14 +20,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ReservationActivity"></activity>
-        <activity android:name=".SignUpActivity" />
+        <activity android:name="com.apsent.villapp.ReservationActivity"></activity>
+        <activity android:name="com.apsent.villapp.SignUpActivity" />
         <activity android:name=".VillaAdapterCustomer" />
-        <activity android:name=".MainActivityCustomer" />
-        <activity android:name=".AdminInsertActivity" />
+        <activity android:name="com.apsent.villapp.MainActivityCustomer" />
+        <activity android:name="com.apsent.villapp.AdminInsertActivity" />
         <activity android:name=".VillaAdapterAdmin" />
-        <activity android:name=".MainActivityAdmin" />
-        <activity android:name=".UserLoginActivity">
+        <activity android:name="com.apsent.villapp.MainActivityAdmin" />
+        <activity android:name="com.apsent.villapp.UserLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
