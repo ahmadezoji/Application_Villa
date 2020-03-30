@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Calender_Dialog extends DialogFragment {
+public class CalenderDialog extends DialogFragment {
     private Context context;
     private Ownerstate ownerstate;
 

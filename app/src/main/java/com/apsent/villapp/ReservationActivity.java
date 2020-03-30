@@ -97,7 +97,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
     }
     public void Onclick_CalenderView(View view)
     {
-        Calender_Dialog dialog=new Calender_Dialog();
+        CalenderDialog dialog=new CalenderDialog();
         dialog.setContext(ReservationActivity.this);
         dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
         //        dialog.setVillaListOwner((VillaListOwner) context);

@@ -14,8 +14,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.absent.villaapp.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -86,7 +84,7 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
         btn_Edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Edit_Dialog dialog=new Edit_Dialog();
+                EditDialog dialog=new EditDialog();
                 dialog.setContext(context);
                 dialog.setVilla(dataSet.get(listPosition));
                 dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
@@ -98,8 +96,6 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
         btn_Del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                int i=dataSet.get(listPosition).getVillaId();
-//                ((VillaListOwner)context).deleteVilla(i);
                 DeleteDialog deleteDialog = new DeleteDialog();
                 deleteDialog.setContext(context);
                 deleteDialog.setVilla(dataSet.get(listPosition));

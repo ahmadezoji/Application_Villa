@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 
-public class Edit_Dialog extends DialogFragment {
+public class EditDialog extends DialogFragment {
     private Context context;
 
     private Villa villa;
