@@ -21,7 +21,7 @@ public class UserCotroller {
     public boolean IsExist(String phone)
     {
         try {
-            if(new IsExistUserTask().execute(phone).get() != null)
+            if(new IsExistUserTask().execute(phone).get().size() != 0)
                 return true;
             else
                 return false;

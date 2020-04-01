@@ -39,23 +39,33 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
         ((EditText)(findViewById(R.id.m_usernameSignUP)))
                 .getText().toString();
 
-//        String password=
-//                ((EditText)(findViewById(R.id.m_passwordSignUP)))
-//                        .getText().toString();
-
         String phonenumber=
                 ((EditText)(findViewById(R.id.m_phonSignUP)))
                         .getText().toString();
 
-        currentuser.setName(username);
-        currentuser.setPhone(phonenumber);
-        currentuser.setType(1);
+
+        if(!usercontroller.IsExist(phonenumber)) {
+            currentuser.setName(username);
+            currentuser.setPhone(phonenumber);
+            currentuser.setType(1);
 
 
-        if(usercontroller.IsExist(phonenumber))
-        {
             AutenticatKey = getAutenticateKey();
-            SendAutenticatKeyToPhone(AutenticatKey);
+            Sms sms = new Sms("mehr_afraz", "Samtema Key : " + String.valueOf(AutenticatKey), currentuser.getPhone());
+            if (Sms.IsValidPhone(currentuser.getPhone())) {
+                if (sms.Send()) {
+                    AutenticatInsert_Dialog dialog=new AutenticatInsert_Dialog();
+                    dialog.setContext(SignUpActivity.this);
+                    dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+                    dialog.setAutheticatekey(AutenticatKey);
+                    FragmentManager fm =(SignUpActivity.this).getFragmentManager();
+                    dialog.show(fm,"");
+
+                }
+            }
+        }
+        else {
+            Toast.makeText(this, "شما قبلا ثبت نام کرده اید", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -110,8 +120,8 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
 
     public int getAutenticateKey()
     {
-        int max=999999;
-        int min=100000;
+        int max=9999;
+        int min=1000;
 
 
         return (int)((Math.random() * ((max - min) + 1)) + min);

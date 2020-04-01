@@ -11,20 +11,23 @@
         android:orientation="horizontal"
         android:background="@color/primaryColor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0mm"
+        android:layout_weight="1">
         <TextView
             android:onClick="OnUser_Click"
             android:id="@+id/m_UserName"
             android:background="#FF9800"
-            android:padding="5mm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="0mm"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:padding="0mm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0mm"
+        android:layout_weight="9">
         <Button
             android:onClick="Onclick_BtnAdd"
             android:id="@+id/m_Btn_Add"

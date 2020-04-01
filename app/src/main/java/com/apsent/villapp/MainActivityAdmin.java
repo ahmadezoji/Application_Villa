@@ -1,13 +1,17 @@
 package com.apsent.villapp;
 
 import android.Manifest;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +22,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.absent.villaapp.R;
+import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Retrofit;
@@ -30,12 +36,15 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     private UploadServer uploadServer;
 
 
-    private static RecyclerView.Adapter adapter;
+    private CardAdapterAdmin adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
     public Users CurrentUser;
+
+    private ImageView imagepanel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,22 +66,41 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
                 .build();
 
         apIs = retrofit.create(APIs.class);
+
+//        setWallpaper();
         filllist();
+    }
+    private void setWallpaper() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
+        WallpaperManager manager = WallpaperManager.getInstance(this.getApplicationContext());
+        try{
+            manager.setBitmap(bitmap);
+            //Toast.makeText(this.getApplicationContext(), "Wallpaper Set", Toast.LENGTH_SHORT).show();
+        } catch (IOException e){
+            //Toast.makeText(this.getApplicationContext(), "Wallpaper Not Set", Toast.LENGTH_SHORT).show();
+        }
+
     }
     @Override
     public void filllist() {
         ArrayList<Villa> villas = villaController.GetAdminVilla(CurrentUser.getId());
 
         if (villas != null) {
-            recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_Admin);
-            recyclerView.setHasFixedSize(true);
 
-            /*Recycle view set adapter*///show Villas
-            layoutManager = new LinearLayoutManager(MainActivityAdmin.this);
-            recyclerView.setLayoutManager(layoutManager);
+            recyclerView =  (RecyclerView) findViewById(R.id.my_recycler_view_Admin);
+            adapter = new CardAdapterAdmin(villas,MainActivityAdmin.this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityAdmin.this,LinearLayoutManager.HORIZONTAL,false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            adapter = new CardAdapterAdmin(villas, MainActivityAdmin.this);
             recyclerView.setAdapter(adapter);
+
+
+
+//            /*Recycle view set adapter*///show Villas
+//            layoutManager = new LinearLayoutManager(MainActivityAdmin.this);
+//            recyclerView.setLayoutManager(layoutManager);
+//            recyclerView.setItemAnimator(new DefaultItemAnimator());
+//            adapter = new CardAdapterAdmin(villas, MainActivityAdmin.this);
+//            recyclerView.setAdapter(adapter);
         }
     }
 

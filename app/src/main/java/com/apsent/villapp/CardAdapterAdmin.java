@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.absent.villaapp.R;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -72,13 +73,12 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
 
 
-//        if (dataSet.get(listPosition).getCover()!=null) {
-//
-//            Glide.with(context)
-//                    .load(dataSet.get(listPosition).getCover())
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(imageViewIcon);
-//        }
+        if (dataSet.get(listPosition).getCover()!=null) {
+
+            Glide.with(context)
+                    .load(dataSet.get(listPosition).getCover())
+                    .into(imageViewIcon);
+        }
 
 
         btn_Edit.setOnClickListener(new View.OnClickListener() {
