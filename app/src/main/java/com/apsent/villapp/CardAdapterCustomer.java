@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.absent.villaapp.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
     private Users currentuser;
     private Context context;
     private List<Villa> dataSet;
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -61,12 +65,29 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
 
         title.setText(dataSet.get(listPosition).getTitle());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
-//        if (dataSet.get(listPosition).getPic_byte().length!=0) {
-//            imageViewIcon.setVisibility(View.VISIBLE);
-//            imageViewIcon.setImageBitmap(dataSet.get(listPosition).getPic());
+
+//        if (dataSet.get(listPosition).getCover()!=null) {
 //
+//            Glide.with(context)
+//                    .load(dataSet.get(listPosition).getCover())
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(imageViewIcon);
 //        }
 
+        imageViewIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if(isImageFitToScreen) {
+//                    isImageFitToScreen=false;
+//                    imageViewIcon.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+//                    imageViewIcon.setAdjustViewBounds(true);
+//                }else{
+//                    isImageFitToScreen=true;
+//                    imageViewIcon.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+//                    imageViewIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+//                }
+            }
+        });
 
         ((View)holder.itemView).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +104,9 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
 
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        if (dataSet!=null)
+            return dataSet.size();
+        else
+            return 0;
     }
 }

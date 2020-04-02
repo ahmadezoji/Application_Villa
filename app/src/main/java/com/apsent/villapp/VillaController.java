@@ -2,6 +2,7 @@ package com.apsent.villapp;
 
 import android.os.AsyncTask;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -16,7 +17,6 @@ import java.util.List;
 
 public class VillaController {
 
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
     public boolean AddVilla(Villa villa)
     {
         try{
@@ -60,7 +60,7 @@ public class VillaController {
 
                 String strApi=new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"villas/add")
+                                .url(Utils.BASE_URL+"villas/add")
                                 .post(userBody)
                                 .build()
                 )
@@ -98,7 +98,7 @@ public class VillaController {
                 ArrayList<Villa> villas=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"/villas/provider?" +
+                                .url(Utils.BASE_URL+"/villas/provider?" +
                                         "PID="+integers[0]+"")
                                 .build()
                 )
@@ -153,7 +153,7 @@ public class VillaController {
                 ArrayList<Villa> villas=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"villas/all")
+                                .url(Utils.BASE_URL+"villas/all")
                                 .build()
                 )
                         .execute()
@@ -210,7 +210,7 @@ public class VillaController {
 
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"villas/update")
+                                .url(Utils.BASE_URL+"villas/update")
                                 .post(userBody)
                                 .build()
                 )
@@ -224,6 +224,64 @@ public class VillaController {
             catch (Exception e)
             {
                 return false;
+            }
+        }
+    }
+    public List<Villa> getVilla(LatLng latLng ,float zoom)
+    {
+        try {
+            if (latLng != null)
+                return new getVillaByRegionTask().execute((float)latLng.latitude,(float)latLng.longitude,zoom).get();
+            else return null;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+    public class getVillaByRegionTask extends AsyncTask<Float,Object,List<Villa>>
+    {
+
+        @Override
+        protected List<Villa> doInBackground(Float... floats) {
+            try {
+                List<Villa> villas=new ArrayList<>();
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL + "villas/findByRegion?lat="+floats[0]+"&lon="+floats[1]+"&zoom="+floats[2]+"")
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+
+                /*Call back Fill list IF SUCCESS*/
+                JSONArray jsonArray=new JSONArray(strApi);
+                for (int i=0;i<jsonArray.length();i++) {
+                    Villa villa=new Villa();
+                    JSONObject jsonObject =jsonArray.getJSONObject(i);
+                    villa.setVillaId(jsonObject.getInt("id"));
+                    villa.setTitle(jsonObject.getString("title"));
+                    villa.setRoomCount(jsonObject.getInt("roomcnt"));
+                    villa.setCapacity(jsonObject.getInt("capacity"));
+                    villa.setLat(jsonObject.getInt("lat"));
+                    villa.setLon(jsonObject.getInt("lon"));
+                    villa.setAddress(jsonObject.getString("address"));
+                    villa.setCover(jsonObject.getString("cover"));
+                    villa.setCost(jsonObject.getInt("cost"));
+                    villa.setGalleryid(jsonObject.getInt("galleryid"));
+                    villa.setAdminUserId(jsonObject.getInt("providerid"));
+                    villas.add(villa);
+
+                }
+
+
+
+                return villas;
+
+            }catch (Exception e)
+            {
+                return null;
             }
         }
     }
@@ -244,7 +302,7 @@ public class VillaController {
             try {
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL + "villas/delete?id="+String.valueOf(villas[0].getVillaId()))
+                                .url(Utils.BASE_URL + "villas/delete?id="+String.valueOf(villas[0].getVillaId()))
                                 .build()
                 )
                         .execute()

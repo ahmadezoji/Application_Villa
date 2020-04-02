@@ -39,7 +39,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     private CardAdapterAdmin adapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView recyclerView;
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
+
     private APIs apIs;
     public Users CurrentUser;
 
@@ -61,7 +61,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Utils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -93,14 +93,6 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
 
-
-
-//            /*Recycle view set adapter*///show Villas
-//            layoutManager = new LinearLayoutManager(MainActivityAdmin.this);
-//            recyclerView.setLayoutManager(layoutManager);
-//            recyclerView.setItemAnimator(new DefaultItemAnimator());
-//            adapter = new CardAdapterAdmin(villas, MainActivityAdmin.this);
-//            recyclerView.setAdapter(adapter);
         }
     }
 

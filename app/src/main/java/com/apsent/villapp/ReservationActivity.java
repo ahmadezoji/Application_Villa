@@ -30,7 +30,6 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
     public Users CurrentUser;
     public Villa Currentvilla;
 
-    public static final String BASE_URL = "http://127.0.0.1:8080/";
     private APIs apIs;
 
     private static ViewPager mPager;
@@ -53,7 +52,7 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Utils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

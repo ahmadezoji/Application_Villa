@@ -17,7 +17,6 @@ import com.squareup.okhttp.Request;
 import java.util.Calendar;
 
 public class SignUpActivity extends AppCompatActivity implements Ownerstate{
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
     private int AutenticatKey;
     Users currentuser;

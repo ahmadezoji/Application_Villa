@@ -16,7 +16,6 @@ import java.util.UUID;
 public class UploadServer {
 
     private Context context;
-    private String BASE_UPLOAD_URL="http://192.168.1.42:8080/upload/image?file";
 
     public UploadServer() {
     }
@@ -40,7 +39,7 @@ public class UploadServer {
 
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_UPLOAD_URL)
+                                .url(Utils.BASE_URL + "upload/image?file")
                                 .post(requestBody)
                                 .build()
                 )

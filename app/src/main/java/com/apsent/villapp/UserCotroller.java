@@ -16,7 +16,6 @@ import java.util.List;
 
 public class UserCotroller {
 
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
 
     public boolean IsExist(String phone)
     {
@@ -56,7 +55,7 @@ public class UserCotroller {
                 List<Users> users1=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"/users/add")
+                                .url(Utils.BASE_URL+"/users/add")
                                 .post(userBody)
                                 .build()
                 )
@@ -105,7 +104,7 @@ public class UserCotroller {
                 List<Users> users=new ArrayList<>();
                 String strApi = new OkHttpClient().newCall(
                         new Request.Builder()
-                                .url(BASE_URL+"users/findByPhone?phone="+strings[0])
+                                .url(Utils.BASE_URL+"users/findByPhone?phone="+strings[0])
                                 .build()
                 )
                         .execute()

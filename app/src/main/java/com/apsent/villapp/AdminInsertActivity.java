@@ -75,7 +75,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
     private GoogleMap mMap;
 
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
     private APIs apIs;
     LocationManager locationManager;
 
