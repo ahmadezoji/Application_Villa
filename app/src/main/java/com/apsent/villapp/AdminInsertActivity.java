@@ -33,6 +33,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -40,6 +42,17 @@ import java.io.IOException;
 public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
     private UploadServer uploadServer;
+    private Villa currentVilla;
+
+    public boolean isVilla_register_state() {
+        return villa_register_state;
+    }
+
+    public void setVilla_register_state(boolean villa_register_state) {
+        this.villa_register_state = villa_register_state;
+    }
+
+    private boolean villa_register_state;
 
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
@@ -94,6 +107,25 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         villaController = new VillaController();
 
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isVilla_register_state())
+                {
+                    showFileChooser();
+                    /*
+                     * upload pic update query in villa added
+                     * */
+                    //String url =  UploadCoverToServer(coverUri);
+                    //update villa set cover =url
+
+
+                }
+
+
+            }
+        });
         locationManager = (LocationManager)
                 getSystemService(this.LOCATION_SERVICE);
 
@@ -104,7 +136,7 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
                 mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                     @Override
@@ -176,29 +208,49 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     }
     public void Onclick_BtnAdd(View view)
     {
+        addVilla();
+    }
+    private void updateVilla()
+    {
+        try
+        {
+            villaController.EditVilla(currentVilla);
+            Toast.makeText(this, "upload complete !", Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void addVilla()
+    {
         try{
 
-            Villa villa=new Villa();
+            currentVilla =new Villa();
 
-            villa.setTitle(title.getText().toString());
-            villa.setAddress(address.getText().toString());
-            villa.setLat((float)villa_latLng.latitude);
-            villa.setLon((float)villa_latLng.longitude);
-            villa.setCost(Integer.valueOf(cost.getText().toString()));
-            villa.setRoomCount(Integer.valueOf(room_count.getText().toString()));
-            villa.setCapacity(Integer.valueOf(capacity.getText().toString()));
-            villa.setArea(Integer.valueOf(area.getText().toString()));
-            villa.setCover(UploadCoverToServer(coverUri));
-            villa.setGalleryid(CurrentUser.getId());
-            villa.setAdminUserId(CurrentUser.getId());
+            currentVilla.setTitle(title.getText().toString());
+            currentVilla.setAddress(address.getText().toString());
+            currentVilla.setLat((float)villa_latLng.latitude);
+            currentVilla.setLon((float)villa_latLng.longitude);
+            currentVilla.setCost(Integer.valueOf(cost.getText().toString()));
+            currentVilla.setRoomCount(Integer.valueOf(room_count.getText().toString()));
+            currentVilla.setCapacity(Integer.valueOf(capacity.getText().toString()));
+            currentVilla.setArea(Integer.valueOf(area.getText().toString()));
+//            currentVilla.setCover(UploadCoverToServer(coverUri));
+            currentVilla.setGalleryid(CurrentUser.getId());
+            currentVilla.setAdminUserId(CurrentUser.getId());
 
-            if(villaController.AddVilla(villa)) {
+            currentVilla = villaController.AddVilla(currentVilla);
+            if(currentVilla!=null) {
                 Toast.makeText(this, "Insert Success !", Toast.LENGTH_LONG).show();
+                setVilla_register_state(true);
             }
-            else
-                Toast.makeText(this,"Error in Insert Item",Toast.LENGTH_LONG).show();
+            else {
+                Toast.makeText(this, "Error in Insert Item", Toast.LENGTH_LONG).show();
+                setVilla_register_state(false);
+            }
 
-            Control_Default();
+//            Control_Default();
         }
         catch (Exception e)
         {
@@ -243,6 +295,15 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                     coverUri=filePath;
                     coverBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                     cover.setImageBitmap(coverBmp);
+                    if (isVilla_register_state())
+                    {
+                        String image_url = UploadCoverToServer(coverUri);
+                        currentVilla.setCover(image_url);
+                        if(villaController.EditVilla(currentVilla))
+                            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+                    }
+
+
 
                 } catch (IOException e) {
                     e.printStackTrace();

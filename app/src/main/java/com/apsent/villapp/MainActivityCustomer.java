@@ -89,7 +89,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
             public void onMapReady(GoogleMap googleMap) {
 
                 mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.37222794178551,54.63216595351696), 5.0f));
@@ -217,13 +217,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
     @Override
     public void onLocationChanged(Location location) {
-//        if (mMap!=null) {
-//            villa_latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-//            mMap.animateCamera(cameraUpdate);
-//            locationManager.removeUpdates(this);
-//        }
+
     }
 
     @Override

@@ -53,7 +53,7 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
             Sms sms = new Sms("mehr_afraz", "Samtema Key : " + String.valueOf(AutenticatKey), currentuser.getPhone());
             if (Sms.IsValidPhone(currentuser.getPhone())) {
                 if (sms.Send()) {
-                    AutenticatInsert_Dialog dialog=new AutenticatInsert_Dialog();
+                    AutenticatInsertDialog dialog=new AutenticatInsertDialog();
                     dialog.setContext(SignUpActivity.this);
                     dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
                     dialog.setAutheticatekey(AutenticatKey);
@@ -76,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity implements Ownerstate{
         protected void onPostExecute(Integer integer) {
             if (integer==1)//send To Phone Success
             {
-                AutenticatInsert_Dialog dialog=new AutenticatInsert_Dialog();
+                AutenticatInsertDialog dialog=new AutenticatInsertDialog();
                 dialog.setContext(SignUpActivity.this);
                 dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
                 dialog.setAutheticatekey(AutenticatKey);

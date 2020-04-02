@@ -17,14 +17,14 @@ import java.util.List;
 
 public class VillaController {
 
-    public boolean AddVilla(Villa villa)
+    public Villa AddVilla(Villa villa)
     {
         try{
-            return new Addvilla_task().execute(villa).get();
+            return new addvillaTask().execute(villa).get();
 
         }catch (Exception e)
         {
-            return false;
+            return null;
         }
     }
     public JSONObject getJson_villa(Villa villa) throws JSONException {
@@ -77,6 +77,53 @@ public class VillaController {
             catch (Exception e)
             {
                 return false;
+            }
+        }
+    }
+    public class addvillaTask extends AsyncTask<Villa,Object,Villa>
+    {
+
+        @Override
+        protected Villa doInBackground(Villa... villas) {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                // put your json here
+                RequestBody userBody = RequestBody.create(JSON,getJson_villa(villas[0]).toString());
+
+
+                String strApi=new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL+"villas/add")
+                                .post(userBody)
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+
+                /*Call back Fill list IF SUCCESS*/
+                JSONArray jsonArray=new JSONArray(strApi);
+                Villa villa=new Villa();
+                JSONObject jsonObject =jsonArray.getJSONObject(jsonArray.length()-1);
+
+                villa.setVillaId(jsonObject.getInt("id"));
+                villa.setTitle(jsonObject.getString("title"));
+                villa.setRoomCount(jsonObject.getInt("roomcnt"));
+                villa.setCapacity(jsonObject.getInt("capacity"));
+                villa.setLat(jsonObject.getInt("lat"));
+                villa.setLon(jsonObject.getInt("lon"));
+                villa.setAddress(jsonObject.getString("address"));
+                villa.setCover(jsonObject.getString("cover"));
+                villa.setCost(jsonObject.getInt("cost"));
+                villa.setGalleryid(jsonObject.getInt("galleryid"));
+                villa.setAdminUserId(jsonObject.getInt("providerid"));
+
+                return villa;
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }

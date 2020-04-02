@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.absent.villaapp.R;
 
-public class AutenticatInsert_Dialog extends DialogFragment {
+public class AutenticatInsertDialog extends DialogFragment {
     private Context context;
     private Integer Autheticatekey;
 
