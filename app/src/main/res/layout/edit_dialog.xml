@@ -71,14 +71,14 @@
         <Button
             android:id="@+id/btn_upload_editDlg"
             android:layout_marginRight="5dp"
-            android:background="@color/primaryLightColor"
+            android:background="@color/primaryColor"
             android:text="Upload"
             android:layout_weight="1"
             android:layout_width="0mm"
             android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btn_camera_editDlg"
-            android:background="@color/primaryLightColor"
+            android:background="@color/pressColor"
             android:text="Camera"
             android:layout_weight="1"
             android:layout_width="0mm"

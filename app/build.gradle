@@ -56,7 +56,12 @@ dependencies {
 
     implementation 'com.android.support:cardview-v7:29.0.0'
     implementation 'com.android.support:recyclerview-v7:29.0.0'
+
+
+    //implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    //these two lines should be added
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'

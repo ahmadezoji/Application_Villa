@@ -274,6 +274,70 @@ public class VillaController {
             }
         }
     }
+    public List<Villa> getVilla(String address)
+    {
+        try {
+            if (address != null)
+                return new getVillaByAddressTask().execute(address).get();
+            else
+                return null;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+    public class getVillaByAddressTask extends AsyncTask<String,Object,List<Villa>>
+    {
+
+        @Override
+        protected List<Villa> doInBackground(String... strings) {
+            try {
+                List<Villa>villas=new ArrayList<>();
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL+"villas/findByAddress?address="+strings[0]+"")
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+
+                /*Call back Fill list IF SUCCESS*/
+                JSONArray jsonArray=new JSONArray(strApi);
+                for (int i=0;i<jsonArray.length();i++) {
+                    Villa villa=new Villa();
+                    JSONObject jsonObject =jsonArray.getJSONObject(i);
+                    villa.setVillaId(jsonObject.getInt("id"));
+                    villa.setTitle(jsonObject.getString("title"));
+                    villa.setRoomCount(jsonObject.getInt("roomcnt"));
+                    villa.setCapacity(jsonObject.getInt("capacity"));
+                    villa.setLat(jsonObject.getInt("lat"));
+                    villa.setLon(jsonObject.getInt("lon"));
+                    villa.setAddress(jsonObject.getString("address"));
+                    villa.setCover(jsonObject.getString("cover"));
+                    villa.setCost(jsonObject.getInt("cost"));
+                    villa.setGalleryid(jsonObject.getInt("galleryid"));
+                    villa.setAdminUserId(jsonObject.getInt("providerid"));
+
+
+                    String searchTxt = strings[0];
+                    String expression = "(?i).*"+searchTxt+".*";
+                    if(villa.getAddress().matches(expression) || villa.getTitle().matches(expression))
+                        villas.add(villa);
+
+                }
+
+
+
+                return villas;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+    }
     public List<Villa> getVilla(LatLng latLng ,float zoom)
     {
         try {

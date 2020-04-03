@@ -1,10 +1,21 @@
 <resources>
-  <color name="primaryColor">#ff7043</color>
-  <color name="primaryLightColor">#D1530F</color>
-  <color name="primaryDarkColor">#c63f17</color>
-  <color name="secondaryColor">#64b5f6</color>
-  <color name="secondaryLightColor">#9be7ff</color>
-  <color name="secondaryDarkColor">#2286c3</color>
-  <color name="primaryTextColor">#880e4f</color>
-  <color name="secondaryTextColor">#000000</color>
+  <color name="primaryColor">#FFFFFF</color>
+  <color name="primaryDarkColor">#000000</color>
+  <color name="maxGreyColor">#0F0F0F</color>
+  <color name="minGreyColor">#242424</color>
+  <color name="liteGreyColor">#E1F1F1F1</color>
+  <color name="selectGreyColor">#FA414141</color>
+  <color name="Transparent">#00000000</color>
+  <color name="accentColor">#FF0033</color>
+  <color name="focusColor">#CDFF0066</color>
+  <color name="focusColorBlue">#25A6FF</color>
+  <color name="focusColorDarkBlue">#004370</color>
+  <color name="focusColorTransparent">#32FF0066</color>
+  <color name="overColor">#CDFF0066</color>
+  <color name="pressColor">#CDDC39</color>
+  <color name="onColor">#FFFFFF</color>
+  <color name="offColor">#40FFFFFF</color>
+  <color name="txtColor">#FFFFFF</color>
+
+  <color name="cardBGColor">#40FFFFFF</color>
 </resources>

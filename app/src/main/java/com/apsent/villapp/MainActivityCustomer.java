@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.absent.villaapp.*;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -70,7 +75,6 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
         villaController = new VillaController();
         villaList = new ArrayList<>();
-        getAllVillas();
 
         locationManager = (LocationManager)
                 getSystemService(this.LOCATION_SERVICE);
@@ -81,7 +85,22 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
         else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
-
+//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)findViewById(R.id.place_autocomplete_fragment);
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//                mMap.clear();
+//                mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 12.0f));
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//
+//            }
+//        });
+//
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -89,7 +108,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
             public void onMapReady(GoogleMap googleMap) {
 
                 mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 mMap.setMyLocationEnabled(true);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.37222794178551,54.63216595351696), 5.0f));
@@ -109,7 +128,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                             cameraPosition=pos;
                             currentZoom = pos.zoom;
                             currentPos =new LatLng(pos.target.latitude,pos.target.longitude);
-                            filllist();
+                            getVilla_By_positoin(currentPos,currentZoom);
                             showLocations(villaList);
                         }
                     }
@@ -119,19 +138,39 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                     public void onCameraMove() {
                         CameraPosition Position = mMap.getCameraPosition();
                         currentPos =new LatLng(Position.target.latitude,Position.target.longitude);
-                        filllist();
+                        getVilla_By_positoin(currentPos,currentZoom);
                         showLocations(villaList);
                     }
                 });
             }
         });
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         CurrentUser = (Users) bundle.get("user");
         ((TextView) (findViewById(R.id.m_UserName_Customer)))
                 .setText(CurrentUser.getName());
 
+
+        SearchView searchView = findViewById(R.id.item_search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String s)
+            {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                getVilla_By_address(newText);
+                return false;
+            }
+        });
+
         this.filllist();
+
 
     }
     private void showLocations(List<Villa> villas) {
@@ -146,30 +185,37 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
             }
         }
     }
-
-    private void getAllVillas() {
-        villaList = villaController.getAllVilles();
+    private void getVilla_By_address(String address)
+    {
+        villaList = villaController.getVilla(address);
         if (villaList != null) {
             recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
             adapter = new CardAdapterCustomer(villaList, MainActivityCustomer.this, CurrentUser);
-            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityCustomer.this, LinearLayoutManager.HORIZONTAL, false));
+            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityCustomer.this, LinearLayoutManager.VERTICAL, false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
-
         }
     }
-
-    @Override
-    public void filllist() {
-
+    private void getVilla_By_positoin(LatLng currentPos,float currentZoom)
+    {
         villaList = villaController.getVilla(currentPos,currentZoom);
         if (villaList != null) {
             recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
             adapter = new CardAdapterCustomer(villaList, MainActivityCustomer.this, CurrentUser);
-            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityCustomer.this, LinearLayoutManager.HORIZONTAL, false));
+            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityCustomer.this, LinearLayoutManager.VERTICAL, false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
-
+        }
+    }
+    @Override
+    public void filllist() {
+        villaList = villaController.getAllVilles();
+        if (villaList != null) {
+            recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+            adapter = new CardAdapterCustomer(villaList, MainActivityCustomer.this, CurrentUser);
+            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityCustomer.this, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
         }
     }
 

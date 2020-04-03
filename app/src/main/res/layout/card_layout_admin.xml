@@ -9,7 +9,7 @@
         android:id="@+id/card_view_admin"
         android:layout_width="match_parent"
         android:layout_height="90mm"
-        card_view:cardBackgroundColor="@color/primaryLightColor"
+        card_view:cardBackgroundColor="@color/design_default_color_primary"
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="5dp"
         card_view:cardUseCompatPadding="true">

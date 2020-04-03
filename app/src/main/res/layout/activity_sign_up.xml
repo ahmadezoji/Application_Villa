@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:background="@color/secondaryLightColor"
+        android:background="@color/focusColor"
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -19,7 +19,7 @@
             android:hint="Name"
             android:padding="3mm"
             android:layout_margin="1mm"
-            android:background="@color/secondaryColor"
+            android:background="@color/focusColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -41,7 +41,7 @@
             android:hint="Mobile"
             android:padding="3mm"
             android:layout_margin="1mm"
-            android:background="@color/secondaryColor"
+            android:background="@color/focusColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -54,7 +54,7 @@
         android:textSize="4mm"
         android:padding="5mm"
         android:text="Sign Up"
-        android:background="@color/primaryLightColor"
-        android:textColor="@color/secondaryTextColor" />
+        android:background="@color/focusColorBlue"
+        android:textColor="@color/accentColor" />
 
 </LinearLayout>

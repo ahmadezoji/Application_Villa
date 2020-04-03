@@ -1,10 +1,12 @@
 package com.apsent.villapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.absent.villaapp.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,14 +39,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
     private UploadServer uploadServer;
     private Villa currentVilla;
+    private static ViewPager mPager;
+    private SupportMapFragment mapFragment;
+    private ArrayList<Bitmap> bitmapList;
+    private SlidingImage_Adapter slidingImage_adapter;
+    private float downX;
 
     public boolean isVilla_register_state() {
         return villa_register_state;
@@ -106,32 +118,30 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
         villaController = new VillaController();
 
+        pager_init();
+        map_init();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (isVilla_register_state())
-                {
-                    showFileChooser();
-                    /*
-                     * upload pic update query in villa added
-                     * */
-                    //String url =  UploadCoverToServer(coverUri);
-                    //update villa set cover =url
-
-
-                }
-
+            public void onClick(View v) {
+                showFileChooser();
 
             }
         });
+        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, TAKE_PICTURE);
+            }
+        });
+    }
+    private void map_init()
+    {
         locationManager = (LocationManager)
                 getSystemService(this.LOCATION_SERVICE);
 
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_InsertVilla);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -152,7 +162,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                         villa_latLng = new LatLng(latLng.latitude, latLng.longitude);
                         mMap.addMarker(new MarkerOptions().position(villa_latLng));
                         mMap.setMyLocationEnabled(true);
-
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
                     }
                 });
@@ -165,39 +174,59 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},123);
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-
-
-//        /*click Capture By Gallery*/
-        btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
-        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFileChooser();
-
-            }
-        });
-
-        /*Click Capture By Camera*/
-        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
-
-        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_PICTURE);
-            }
-        });
     }
-
     public void Onclick_addpic(View view)
     {
         Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, GALLERY_PICTURE);
     }
 
+    private boolean wasSwipeToRightEvent(MotionEvent event) {
+        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                return true;
+//            case MotionEvent.ACTION_UP:
+//                return false;
+            case MotionEvent.ACTION_MOVE:
+            {
+//                float x = event.getX();
+//                if(event.getX() - downX > 0)
+//                {
+//                    downX = event.getX();
+//                    Toast.makeText(this, "move to right", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+
+            }
+
+            default:
+                return false;
+        }
+    }
+    @SuppressLint("ClickableViewAccessibility")
+    private void pager_init()
+    {
+//        mPager = (ViewPager) findViewById(R.id.adminInser_pager);
+//        bitmapList =new ArrayList<>();
+//        bitmapList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa1));
+//        slidingImage_adapter= new SlidingImage_Adapter(AdminInsertActivity.this,bitmapList);
+//
+//
+//        mPager.setAdapter(slidingImage_adapter);
+//
+//        CirclePageIndicator indicator = (CirclePageIndicator)
+//                findViewById(R.id.admin_Insert_indicator);
+//
+//        indicator.setViewPager(mPager);
+//        /*------------------------------------------------------------------*/
+//        final float density = getResources().getDisplayMetrics().density;
+//        indicator.setRadius(5 * density);
+    }
     private void cast()
     {
+        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
+        //        FloatingActionButton fab = findViewById(R.id.fab);
+        btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
         title=(EditText)(findViewById(R.id.VTitle));
         cost=(EditText)(findViewById(R.id.VCost));
         room_count=(EditText)(findViewById(R.id.VRoomCnt));
@@ -205,6 +234,11 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         area=(EditText)(findViewById(R.id.VArea));
         address=(EditText)(findViewById(R.id.VAdderss));
         cover =(ImageView)findViewById(R.id.adminInsert_cover);
+
+
+        mapFragment= (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map_InsertVilla);
+
     }
     public void Onclick_BtnAdd(View view)
     {
@@ -294,6 +328,8 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 try {
                     coverUri=filePath;
                     coverBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+//                    bitmapList.add(coverBmp);
+//                    slidingImage_adapter.notifyDataSetChanged();
                     cover.setImageBitmap(coverBmp);
                     if (isVilla_register_state())
                     {

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Samtema</string>
+
+    <string name="search_hint">Address</string>
 </resources>
