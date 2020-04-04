@@ -46,40 +46,6 @@ public class VillaController {
         return jsonObject;
 
     }
-    public class Addvilla_task extends AsyncTask<Villa,Object,Boolean>
-    {
-        @Override
-        protected Boolean doInBackground(Villa... villas) {
-            try {
-
-                OkHttpClient client = new OkHttpClient();
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                // put your json here
-                RequestBody userBody = RequestBody.create(JSON,getJson_villa(villas[0]).toString());
-
-
-                String strApi=new OkHttpClient().newCall(
-                        new Request.Builder()
-                                .url(Utils.BASE_URL+"villas/add")
-                                .post(userBody)
-                                .build()
-                )
-                        .execute()
-                        .body()
-                        .string();
-
-
-                    return true;
-            }
-            catch (JSONException e) {
-                return false;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-    }
     public class addvillaTask extends AsyncTask<Villa,Object,Villa>
     {
 
@@ -103,9 +69,10 @@ public class VillaController {
                         .string();
 
                 /*Call back Fill list IF SUCCESS*/
-                JSONArray jsonArray=new JSONArray(strApi);
+//                JSONArray jsonArray=new JSONArray(strApi);
                 Villa villa=new Villa();
-                JSONObject jsonObject =jsonArray.getJSONObject(jsonArray.length()-1);
+//                JSONObject jsonObject =jsonArray.getJSONObject(0);
+                JSONObject jsonObject = new JSONObject(strApi);
 
                 villa.setVillaId(jsonObject.getInt("id"));
                 villa.setTitle(jsonObject.getString("title"));
@@ -406,6 +373,40 @@ public class VillaController {
             return false;
         }
     }
+    public void DeleteGallery(Integer vid)
+    {
+        try {
+            new deleteGalleryTask().execute(vid);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public class deleteGalleryTask extends AsyncTask<Integer,Object,Boolean>
+    {
+
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            try {
+
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL + "gallery/deleteByVID?vid="+integers[0]+"")
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+    }
     private class DeleteVillaTask extends AsyncTask<Villa,Object,Boolean>
     {
         @Override
@@ -428,5 +429,150 @@ public class VillaController {
                 return false;
             }
         }
+    }
+    public Boolean addgallery(String[] strings){
+        try {
+            return new addgalleryTask().execute(strings).get();
+        }catch (Exception e)
+        {
+            return false;
+        }
+    }
+    public class addgalleryTask extends AsyncTask<String,Object,Boolean>
+    {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            try {
+                List<Gallery> galleries=new ArrayList<>();
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL + "gallery/add2?vid="+strings[0]+"&img1="+strings[1]+"")
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+
+
+                if (strApi.contains("true"))
+                    return true;
+                else return false;
+            }catch (Exception e)
+            {
+                return false;
+            }
+        }
+    }
+    public class getGalleryTask extends AsyncTask<Integer,Object,Gallery>
+    {
+
+        @Override
+        protected Gallery doInBackground(Integer... integers) {
+            try {
+                List<Gallery> list=new ArrayList<>();
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL + "gallery/findGallery?vid="+String.valueOf(integers[0]))
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+                /*Call back Fill list IF SUCCESS*/
+                JSONArray jsonArray=new JSONArray(strApi);
+                for (int i=0;i<jsonArray.length();i++) {
+                    Gallery gallery=new Gallery();
+                    JSONObject jsonObject =jsonArray.getJSONObject(i);
+                    gallery.setId(jsonObject.getInt("id"));
+                    gallery.setVid(jsonObject.getInt("vid"));
+                    gallery.setImg1(jsonObject.getString("img1"));
+                    gallery.setImg2(jsonObject.getString("img2"));
+                    gallery.setImg3(jsonObject.getString("img3"));
+                    gallery.setImg4(jsonObject.getString("img4"));
+                    gallery.setImg5(jsonObject.getString("img5"));
+                    gallery.setImg6(jsonObject.getString("img6"));
+                    gallery.setImg7(jsonObject.getString("img7"));
+                    gallery.setImg8(jsonObject.getString("img8"));
+                    gallery.setImg9(jsonObject.getString("img9"));
+                    gallery.setImg10(jsonObject.getString("img10"));
+                    list.add(gallery);
+
+                }
+
+                return list.get(0);
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+    }
+    public Gallery getGallery(Integer vid)
+    {
+        try {
+            return new getGalleryTask().execute(vid).get();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+    public boolean updateGallery(Gallery gallery)
+    {
+        try {
+            return new updateGalleryTask().execute(gallery).get();
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+    private class updateGalleryTask extends AsyncTask<Gallery,Object,Boolean>
+    {
+
+        @Override
+        protected Boolean doInBackground(Gallery... galleries) {
+            try {
+
+
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody galleryBody = RequestBody.create(JSON,getJson_gellery(galleries[0]).toString());
+                String strApi = new OkHttpClient().newCall(
+                        new Request.Builder()
+                                .url(Utils.BASE_URL + "gallery/update")
+                                .post(galleryBody)
+                                .build()
+                )
+                        .execute()
+                        .body()
+                        .string();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+    }
+    public JSONObject getJson_gellery(Gallery gallery) throws JSONException {
+        // create your json here
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id",gallery.getId());
+        jsonObject.put("vid",gallery.getVid());
+        jsonObject.put("img1",gallery.getImg1());
+        jsonObject.put("img2",gallery.getImg2());
+        jsonObject.put("img3",gallery.getImg3());
+        jsonObject.put("img4",gallery.getImg4());
+        jsonObject.put("img5",gallery.getImg5());
+        jsonObject.put("img6",gallery.getImg6());
+        jsonObject.put("img7",gallery.getImg7());
+        jsonObject.put("img8",gallery.getImg8());
+        jsonObject.put("img9",gallery.getImg9());
+        jsonObject.put("img10",gallery.getImg10());
+
+
+        return jsonObject;
+
     }
 }

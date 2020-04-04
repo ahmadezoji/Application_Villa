@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
@@ -23,6 +23,7 @@ public class EditDialog extends DialogFragment {
     private Context context;
 
     private Villa villa;
+    private Villa villa_edited;
     private VillaListOwner villaListOwner;
 
     private Bitmap coverBmp = null;
@@ -85,6 +86,17 @@ public class EditDialog extends DialogFragment {
         area.setText(String.valueOf(villa.getArea()));
         Glide.with(context).load(villa.getCover()).into(imageView_villa);
 
+
+
+        ((Button)(view.findViewById(R.id.btn_gotoGallery)))
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context,GalleryActivity.class);
+                        intent.putExtra("villa",villa);
+                        context.startActivity(intent);
+                    }
+                });
         ((Button)(view.findViewById(R.id.btn_upload_editDlg)))
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,7 +118,7 @@ public class EditDialog extends DialogFragment {
         ((Button)view.findViewById(R.id.btn_update)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Villa villa_edited=new Villa();
+                villa_edited=new Villa();
 
                 villa_edited.setVillaId(villa.getVillaId());
                 villa_edited.setAdminUserId(villa.getAdminUserId());

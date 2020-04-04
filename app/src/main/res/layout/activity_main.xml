@@ -18,6 +18,7 @@
             android:textAlignment="center"
             android:id="@+id/Login_phone"
             android:hint="Phone"
+            android:textColorHint="@color/selectGreyColor"
             android:background="@color/primaryColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

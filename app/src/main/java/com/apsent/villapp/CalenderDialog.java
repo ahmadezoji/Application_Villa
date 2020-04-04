@@ -10,7 +10,7 @@ import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;

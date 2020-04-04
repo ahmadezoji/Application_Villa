@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="40dp"
+    android:orientation="vertical"
+    android:layoutDirection="ltr">
+
+    <GridView
+        android:layout_weight="9"
+        android:layout_width="match_parent"
+        android:layout_height="0mm"
+        android:id="@+id/Gallery_ImagesGridView"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:columnWidth="100dp"
+        android:gravity="center|bottom"
+        android:horizontalSpacing="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="spacingWidth"
+        android:verticalSpacing="20dp"
+        android:visibility="visible"
+        />
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0mm"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Gallery_CancleBtn"
+            android:text="Cancle"
+            android:layout_weight="1"
+            android:layout_width="0mm"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/Gallery_SaveBtn"
+            android:text="Save"
+            android:layout_weight="1"
+            android:layout_width="0mm"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+</LinearLayout>

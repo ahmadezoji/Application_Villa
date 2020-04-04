@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;

@@ -29,7 +29,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,13 +37,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
@@ -68,6 +64,7 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
     private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
+    private Button btnGotoGallery;
 
     private Bitmap coverBmp = null;
     private Uri coverUri = null
@@ -118,14 +115,21 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
         villaController = new VillaController();
 
-        pager_init();
         map_init();
 
+
+        btnGotoGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminInsertActivity.this,GalleryActivity.class);
+                intent.putExtra("villa",currentVilla);
+                startActivity(intent);
+            }
+        });
         btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFileChooser();
-
             }
         });
         btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
@@ -203,27 +207,9 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 return false;
         }
     }
-    @SuppressLint("ClickableViewAccessibility")
-    private void pager_init()
-    {
-//        mPager = (ViewPager) findViewById(R.id.adminInser_pager);
-//        bitmapList =new ArrayList<>();
-//        bitmapList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa1));
-//        slidingImage_adapter= new SlidingImage_Adapter(AdminInsertActivity.this,bitmapList);
-//
-//
-//        mPager.setAdapter(slidingImage_adapter);
-//
-//        CirclePageIndicator indicator = (CirclePageIndicator)
-//                findViewById(R.id.admin_Insert_indicator);
-//
-//        indicator.setViewPager(mPager);
-//        /*------------------------------------------------------------------*/
-//        final float density = getResources().getDisplayMetrics().density;
-//        indicator.setRadius(5 * density);
-    }
     private void cast()
     {
+        btnGotoGallery = (Button)findViewById(R.id.BtngoToGallery);
         btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
         //        FloatingActionButton fab = findViewById(R.id.fab);
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
@@ -259,31 +245,39 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     private void addVilla()
     {
         try{
+            String upload_url;
+            if (coverUri!=null) {
 
-            currentVilla =new Villa();
+                currentVilla = new Villa();
 
-            currentVilla.setTitle(title.getText().toString());
-            currentVilla.setAddress(address.getText().toString());
-            currentVilla.setLat((float)villa_latLng.latitude);
-            currentVilla.setLon((float)villa_latLng.longitude);
-            currentVilla.setCost(Integer.valueOf(cost.getText().toString()));
-            currentVilla.setRoomCount(Integer.valueOf(room_count.getText().toString()));
-            currentVilla.setCapacity(Integer.valueOf(capacity.getText().toString()));
-            currentVilla.setArea(Integer.valueOf(area.getText().toString()));
-//            currentVilla.setCover(UploadCoverToServer(coverUri));
-            currentVilla.setGalleryid(CurrentUser.getId());
-            currentVilla.setAdminUserId(CurrentUser.getId());
+                currentVilla.setTitle(title.getText().toString());
+                currentVilla.setAddress(address.getText().toString());
+                currentVilla.setLat((float) villa_latLng.latitude);
+                currentVilla.setLon((float) villa_latLng.longitude);
+                currentVilla.setCost(Integer.valueOf(cost.getText().toString()));
+                currentVilla.setRoomCount(Integer.valueOf(room_count.getText().toString()));
+                currentVilla.setCapacity(Integer.valueOf(capacity.getText().toString()));
+                currentVilla.setArea(Integer.valueOf(area.getText().toString()));
+                upload_url = UploadCoverToServer(coverUri);
+                currentVilla.setCover(upload_url);
+                currentVilla.setGalleryid(CurrentUser.getId());
+                currentVilla.setAdminUserId(CurrentUser.getId());
 
-            currentVilla = villaController.AddVilla(currentVilla);
-            if(currentVilla!=null) {
-                Toast.makeText(this, "Insert Success !", Toast.LENGTH_LONG).show();
-                setVilla_register_state(true);
+                currentVilla = villaController.AddVilla(currentVilla);
+                if (currentVilla != null) {
+                    Toast.makeText(this, "Insert Villa Success !", Toast.LENGTH_LONG).show();
+
+                    String[] strings={String.valueOf(currentVilla.getVillaId()),upload_url};
+                    if(villaController.addgallery(strings))
+                        Toast.makeText(this, "Create Gallery Success !", Toast.LENGTH_LONG).show();
+
+                    setVilla_register_state(true);
+                } else {
+                    Toast.makeText(this, "Error in Insert Item", Toast.LENGTH_LONG).show();
+                    setVilla_register_state(false);
+                }
             }
-            else {
-                Toast.makeText(this, "Error in Insert Item", Toast.LENGTH_LONG).show();
-                setVilla_register_state(false);
-            }
-
+            else Toast.makeText(this, "یک عکس برای کاور آپلود کنید", Toast.LENGTH_SHORT).show();
 //            Control_Default();
         }
         catch (Exception e)
@@ -293,12 +287,10 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     }
     private String UploadCoverToServer(Uri uri)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PackageInfo.REQUESTED_PERMISSION_GRANTED);
+        if(uri!=null) {
+           return uploadServer.uploadImage(uri);
         }
-        return uploadServer.uploadImage(uri);
+        return null;
     }
 
     private void Control_Default()
@@ -328,8 +320,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 try {
                     coverUri=filePath;
                     coverBmp = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-//                    bitmapList.add(coverBmp);
-//                    slidingImage_adapter.notifyDataSetChanged();
                     cover.setImageBitmap(coverBmp);
                     if (isVilla_register_state())
                     {
@@ -364,6 +354,11 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     }
     //method to show file chooser
     private void showFileChooser() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PackageInfo.REQUESTED_PERMISSION_GRANTED);
+        }
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -391,22 +386,6 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         Log.d("","");
     }
 
-    //Requesting permission
-    private void requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            return;
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            //If the user has denied the permission previously your code will come to this block
-            //Here you can explain why you need this permission
-            //Explain here why you need this permission
-        }
-        //And finally ask for the permission
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-    }
-
-
-    //This method will be called when the user will tap on allow or deny
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 

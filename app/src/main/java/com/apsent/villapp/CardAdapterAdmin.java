@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

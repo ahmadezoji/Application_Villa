@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.absent.villaapp.R;
+import com.absent.villapp.R;
 
 import java.util.ArrayList;
 

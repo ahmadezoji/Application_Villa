@@ -1,32 +1,23 @@
 package com.apsent.villapp;
 
 import android.Manifest;
-import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.absent.villaapp.R;
-import com.bumptech.glide.Glide;
-
-import java.io.IOException;
+import com.absent.villapp.R;
 import java.util.ArrayList;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,10 +43,11 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
         Intent intent=getIntent();
         Bundle bundle=intent.getExtras();
-        CurrentUser=(Users) bundle.get("user");
-        ((TextView)(findViewById(R.id.m_UserName)))
-                .setText(CurrentUser.getName());
-
+        if (bundle != null) {
+            CurrentUser = (Users) bundle.get("user");
+            ((TextView) (findViewById(R.id.m_UserName)))
+                    .setText(CurrentUser.getName());
+        }
         villaController = new VillaController();
         uploadServer = new UploadServer();
 
@@ -69,17 +61,6 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
 //        setWallpaper();
         filllist();
-    }
-    private void setWallpaper() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
-        WallpaperManager manager = WallpaperManager.getInstance(this.getApplicationContext());
-        try{
-            manager.setBitmap(bitmap);
-            //Toast.makeText(this.getApplicationContext(), "Wallpaper Set", Toast.LENGTH_SHORT).show();
-        } catch (IOException e){
-            //Toast.makeText(this.getApplicationContext(), "Wallpaper Not Set", Toast.LENGTH_SHORT).show();
-        }
-
     }
     @Override
     public void filllist() {
@@ -98,7 +79,9 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
     @Override
     public void deleteVilla(Villa villa) {
-        villaController.DeleteVilla(villa);
+        if(villaController.DeleteVilla(villa))
+            villaController.DeleteGallery(villa.getVillaId());
+
     }
     @Override
     public void editVilla(Villa villa) {

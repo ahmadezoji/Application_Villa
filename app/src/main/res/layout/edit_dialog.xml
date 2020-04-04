@@ -101,9 +101,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="#F14A4A"
+            android:text="Gallery"
+            android:id="@+id/btn_gotoGallery"/>
+        <Button
+            android:layout_width="0mm"
+            android:layout_marginRight="2mm"
+            android:layout_marginLeft="1mm"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="#F14A4A"
             android:text="Cancle"
-            android:id="@+id/btn_dismiss"
-            ></Button>
+            android:id="@+id/btn_dismiss" />
         <Button
             android:layout_width="0mm"
             android:layout_marginLeft="2mm"
@@ -113,8 +121,7 @@
             android:background="#F14A4A"
             android:text="Save"
             android:id="@+id/btn_update"
-            android:onClick="onClick_btn_update"
-            ></Button>
+            android:onClick="onClick_btn_update" />
 
 
     </LinearLayout>
