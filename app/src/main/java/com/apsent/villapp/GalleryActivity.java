@@ -6,6 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -84,16 +87,6 @@ public class GalleryActivity extends AppCompatActivity {
     }
     private void setImagesToGallery(List<String> images,Gallery gallery)
     {
-//        gallery.setImg1(images.get(0));
-//        gallery.setImg2(images.get(1));
-//        gallery.setImg3(images.get(2));
-//        gallery.setImg4(images.get(3));
-//        gallery.setImg5(images.get(4));
-//        gallery.setImg6(images.get(5));
-//        gallery.setImg7(images.get(6));
-//        gallery.setImg8(images.get(7));
-//        gallery.setImg9(images.get(8));
-//        gallery.setImg10(images.get(9));
         gallery.setImages(images);
     }
     private void SaveGallery(){
@@ -162,6 +155,23 @@ public class GalleryActivity extends AppCompatActivity {
                 ImageView image = (ImageView) convertView.findViewById(R.id.application_icon);
                 if (imStrings.get(position)!=null && imStrings.get(position) != "")
                      Glide.with(GalleryActivity.this).load(imStrings.get(position)).into(image);
+
+                convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+//                        Intent intent = new Intent(GalleryActivity.this,GallerySliderActivity.class);
+//                        intent.putExtra("imageSlider",imStrings.get(position));
+//                        startActivity(intent);
+                        ImageSliderDialog dialog=new ImageSliderDialog();
+                        dialog.setContext(GalleryActivity.this);
+                        dialog.setImagUrl(imStrings.get(position));
+                        dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+                        FragmentManager fm =(GalleryActivity.this).getFragmentManager();
+                        dialog.show(fm,"");
+
+                        return false;
+                    }
+                });
 
                 ((Button)convertView.findViewById(R.id.GalleryGrid_BtnDel))
                 .setOnClickListener(new View.OnClickListener() {
