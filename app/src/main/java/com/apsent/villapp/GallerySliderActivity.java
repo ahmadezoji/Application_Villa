@@ -11,6 +11,7 @@ import java.util.List;
 
 public class GallerySliderActivity extends AppCompatActivity {
     private Gallery gallery;
+    private Integer GalleryPosition;
     private static ViewPager mPager;
     private List<String> imStrings;
     @Override
@@ -22,6 +23,8 @@ public class GallerySliderActivity extends AppCompatActivity {
         Bundle bundle=intent.getExtras();
         if (bundle != null) {
             gallery = (Gallery) bundle.get("galleryForSlider");
+            GalleryPosition = (Integer) bundle.get("galleypos");
+
         }
         if (gallery!=null) {
             imStrings = gallery.getImages();
@@ -38,6 +41,7 @@ public class GallerySliderActivity extends AppCompatActivity {
                 final float density = getResources().getDisplayMetrics().density;
 
                 indicator.setRadius(5 * density);
+                indicator.setCurrentItem(GalleryPosition);
             }
         }
     }

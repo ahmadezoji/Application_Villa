@@ -14,7 +14,7 @@
 		android:id="@+id/application_icon"
 		android:layout_width="100dp"
 		android:layout_height="100dp"
-		android:src="@mipmap/ic_launcher"
+		android:src="@drawable/add_normal"
 		tools:ignore="ContentDescription"/>
 
 	<LinearLayout

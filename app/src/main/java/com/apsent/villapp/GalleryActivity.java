@@ -1,11 +1,13 @@
 package com.apsent.villapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -144,12 +146,15 @@ public class GalleryActivity extends AppCompatActivity implements VillaListOwner
                 ImageView image = (ImageView) convertView.findViewById(R.id.application_icon);
                 if (imStrings.get(position)!=null && imStrings.get(position) != "")
                      Glide.with(GalleryActivity.this).load(imStrings.get(position)).into(image);
+                else
+                    image.setImageDrawable(getResources().getDrawable(R.drawable.add_normal));
 
                 convertView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         Intent intent = new Intent(GalleryActivity.this,GallerySliderActivity.class);
                         intent.putExtra("galleryForSlider",villaGallery);
+                        intent.putExtra("galleypos",position);
                         startActivity(intent);
 //                        ImageSliderDialog dialog=new ImageSliderDialog();
 //                        dialog.setContext(GalleryActivity.this);
@@ -185,10 +190,33 @@ public class GalleryActivity extends AppCompatActivity implements VillaListOwner
         };
         grid.setAdapter(adapter);
     }
-    private void deleteImageFromGallery(Integer position)
+    private void deleteImageFromGallery(final Integer position)
     {
-        imStrings.set(position,null);
-        loadGridView();
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(GalleryActivity.this,R.style.myAlert);
+        builder.setTitle("حذف عکس")
+                .setMessage("آیا با خذف این عکس موافقید ؟")
+                .setPositiveButton("بله", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        imStrings.set(position,null);
+                        loadGridView();
+
+                    }
+                })
+                .setNegativeButton("خیر", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+
+                    }
+                });
+        builder.show();
+
+
     }
     private void UploadImageForGallery(Integer position)
     {
