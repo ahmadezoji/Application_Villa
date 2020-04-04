@@ -87,17 +87,6 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
     public void editVilla(Villa villa) {
         villaController.EditVilla(villa);
     }
-
-    @Override
-    public String UploadCoverToServer(Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PackageInfo.REQUESTED_PERMISSION_GRANTED);
-        }
-        return uploadServer.uploadImage(uri);
-    }
-
     public void OnUser_Click(View view)
     {
         Utils.writePreferences(this,Utils.PFREFRENCE_USER_LOGIN,Utils.PFREFRENCE_USER_LOGIN_KEY,"");

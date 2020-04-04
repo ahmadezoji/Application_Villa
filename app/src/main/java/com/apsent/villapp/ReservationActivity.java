@@ -33,8 +33,6 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
     private APIs apIs;
 
     private static ViewPager mPager;
-    private static int currentPage = 0;
-    private static int NUM_PAGES = 0;
     private ArrayList<Bitmap> imageModelArrayList;
 
     @Override
@@ -70,21 +68,21 @@ public class ReservationActivity extends AppCompatActivity implements Ownerstate
         imageModelArrayList.add(BitmapFactory.decodeResource(getResources(),R.drawable.villa5));
 
 
-
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(new SlidingImage_Adapter(ReservationActivity.this,imageModelArrayList));
-
-        CirclePageIndicator indicator = (CirclePageIndicator)
-                findViewById(R.id.indicator);
-
-        indicator.setViewPager(mPager);
-
-
-        /*------------------------------------------------------------------*/
-
-        final float density = getResources().getDisplayMetrics().density;
-
-        indicator.setRadius(5 * density);
+//
+//        mPager = (ViewPager) findViewById(R.id.pager);
+//        mPager.setAdapter(new SlidingImage_Adapter(ReservationActivity.this,imageModelArrayList));
+//
+//        CirclePageIndicator indicator = (CirclePageIndicator)
+//                findViewById(R.id.indicator);
+//
+//        indicator.setViewPager(mPager);
+//
+//
+//        /*------------------------------------------------------------------*/
+//
+//        final float density = getResources().getDisplayMetrics().density;
+//
+//        indicator.setRadius(5 * density);
 
     }
 

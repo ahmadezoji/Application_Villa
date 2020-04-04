@@ -7,6 +7,5 @@ public interface VillaListOwner {
     void deleteVilla(Villa villa);
     void editVilla(Villa villa);
 
-    String UploadCoverToServer(Uri uri);
 
 }

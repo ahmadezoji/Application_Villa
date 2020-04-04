@@ -229,10 +229,6 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
 
     }
 
-    @Override
-    public String UploadCoverToServer(Uri uri) {
-        return null;
-    }
 
     public void Customer_logout(View view) {
         Utils.writePreferences(this, Utils.PFREFRENCE_USER_LOGIN, Utils.PFREFRENCE_USER_LOGIN_KEY, "");

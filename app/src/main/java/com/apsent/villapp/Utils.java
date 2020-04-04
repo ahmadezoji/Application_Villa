@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 public class Utils {
 
-    public static final String BASE_URL = "http://192.168.1.42:8080/";
-//      public static final String BASE_URL = "http://37.152.182.193:8080/";
+//    public static final String BASE_URL = "http://192.168.1.42:8080/";
+      public static final String BASE_URL = "http://37.152.182.193:8080/";
     public static final String PFREFRENCE_USER_LOGIN = "user";
     public static final String PFREFRENCE_USER_LOGIN_KEY = "user_phone";
 

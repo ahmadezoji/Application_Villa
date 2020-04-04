@@ -185,33 +185,10 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         startActivityForResult(intent, GALLERY_PICTURE);
     }
 
-    private boolean wasSwipeToRightEvent(MotionEvent event) {
-        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                return true;
-//            case MotionEvent.ACTION_UP:
-//                return false;
-            case MotionEvent.ACTION_MOVE:
-            {
-//                float x = event.getX();
-//                if(event.getX() - downX > 0)
-//                {
-//                    downX = event.getX();
-//                    Toast.makeText(this, "move to right", Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-
-            }
-
-            default:
-                return false;
-        }
-    }
     private void cast()
     {
         btnGotoGallery = (Button)findViewById(R.id.BtngoToGallery);
         btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
-        //        FloatingActionButton fab = findViewById(R.id.fab);
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
         title=(EditText)(findViewById(R.id.VTitle));
         cost=(EditText)(findViewById(R.id.VCost));

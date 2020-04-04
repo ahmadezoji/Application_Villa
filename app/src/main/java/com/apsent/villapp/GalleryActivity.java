@@ -6,35 +6,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.absent.villapp.R;
 import com.bumptech.glide.Glide;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends AppCompatActivity implements VillaListOwner{
 
     private List<String> imStrings;
     private Villa currentVilla;
@@ -46,9 +36,7 @@ public class GalleryActivity extends AppCompatActivity {
 
     private Button save_btn;
     private Button cancle_btn;
-    //storage permission code
     private static final int STORAGE_PERMISSION_CODE = 123;
-    //Image request code
     private int PICK_IMAGE_REQUEST = 1;
 
     @Override
@@ -74,6 +62,7 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setImagesToGallery(imStrings,villaGallery);
+                editVilla(currentVilla);
                 SaveGallery();
             }
         });
@@ -91,8 +80,9 @@ public class GalleryActivity extends AppCompatActivity {
     }
     private void SaveGallery(){
         if (villaGallery.getVid()!=null)
-            if(villaController.updateGallery(villaGallery))
+            if(villaController.updateGallery(villaGallery)) {
                 Toast.makeText(this, "گالری شما ذخیره شد", Toast.LENGTH_SHORT).show();
+            }
     }
    private void getVillasGallery(Villa villa)
    {
@@ -139,7 +129,6 @@ public class GalleryActivity extends AppCompatActivity {
     private void loadGridView()
     {
         grid = (GridView) findViewById(R.id.Gallery_ImagesGridView);
-        //fillListString();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 R.layout.list_item,
                 imStrings)
@@ -159,15 +148,15 @@ public class GalleryActivity extends AppCompatActivity {
                 convertView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-//                        Intent intent = new Intent(GalleryActivity.this,GallerySliderActivity.class);
-//                        intent.putExtra("imageSlider",imStrings.get(position));
-//                        startActivity(intent);
-                        ImageSliderDialog dialog=new ImageSliderDialog();
-                        dialog.setContext(GalleryActivity.this);
-                        dialog.setImagUrl(imStrings.get(position));
-                        dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
-                        FragmentManager fm =(GalleryActivity.this).getFragmentManager();
-                        dialog.show(fm,"");
+                        Intent intent = new Intent(GalleryActivity.this,GallerySliderActivity.class);
+                        intent.putExtra("galleryForSlider",villaGallery);
+                        startActivity(intent);
+//                        ImageSliderDialog dialog=new ImageSliderDialog();
+//                        dialog.setContext(GalleryActivity.this);
+//                        dialog.setImagUrl(imStrings.get(position));
+//                        dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+//                        FragmentManager fm =(GalleryActivity.this).getFragmentManager();
+//                        dialog.show(fm,"");
 
                         return false;
                     }
@@ -177,7 +166,10 @@ public class GalleryActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteImageFromGallery(position);
+                        if(position!=0)
+                            deleteImageFromGallery(position);
+                        else
+                            Toast.makeText(GalleryActivity.this, "عکس کاور قابل حذف نیست", Toast.LENGTH_SHORT).show();
                     }
                 });
                 ((Button)convertView.findViewById(R.id.GalleryGrid_BtnEdit))
@@ -204,6 +196,24 @@ public class GalleryActivity extends AppCompatActivity {
         imStrings.set(position,url);
         loadGridView();
     }
+
+    @Override
+    public void filllist() {
+
+    }
+
+    @Override
+    public void deleteVilla(Villa villa) {
+
+    }
+
+    @Override
+    public void editVilla(Villa villa) {
+        villa.setCover(imStrings.get(0));
+        if(villaController.EditVilla(villa))
+            Toast.makeText(this, "ویلای شما بروزرسانی شد", Toast.LENGTH_SHORT).show();
+    }
+
     private String UploadCoverToServer(Uri uri)
     {
         if(uri!=null) {

@@ -1,9 +1,10 @@
 package com.apsent.villapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Gallery {
+public class Gallery implements Serializable {
     private Integer id;
     private Integer vid;
     private String img1;
