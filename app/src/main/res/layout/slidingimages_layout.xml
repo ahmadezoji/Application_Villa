@@ -10,14 +10,6 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
-        android:background="@drawable/item_selected"
         android:scaleType="centerCrop" />
-    <Button
-        android:id="@+id/slider_btnDel"
-        android:visibility="invisible"
-        android:layout_gravity="center"
-        android:layout_width="10mm"
-        android:layout_height="10mm"
-        android:text="Del"/>
-
+<!--    android:background="@drawable/item_selected"-->
 </FrameLayout>

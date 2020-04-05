@@ -19,16 +19,20 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:resizeableActivity="false">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity android:name=".ReservationActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivityCustomer" />
-        <activity android:name=".AdminInsertActivity" />
-        <activity android:name=".MainActivityAdmin" />
+        <activity android:name=".MainActivityCustomer"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity android:name=".AdminInsertActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity android:name=".MainActivityAdmin"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name=".UserLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
