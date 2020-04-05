@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.absent.villapp.R;
+import com.apsent.villapp.R;
 import java.util.ArrayList;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

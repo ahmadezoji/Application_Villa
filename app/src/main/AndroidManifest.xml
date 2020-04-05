@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.absent.villapp">
+    package="com.apsent.villapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,25 +20,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.apsent.villapp.GallerySliderActivity"></activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name="com.apsent.villapp.ReservationActivity" />
-        <activity android:name="com.apsent.villapp.SignUpActivity" />
-        <activity android:name="com.apsent.villapp.MainActivityCustomer" />
-        <activity android:name="com.apsent.villapp.AdminInsertActivity" />
-        <activity android:name="com.apsent.villapp.MainActivityAdmin" />
-        <activity android:name="com.apsent.villapp.UserLoginActivity">
+        <activity android:name=".ReservationActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".MainActivityCustomer" />
+        <activity android:name=".AdminInsertActivity" />
+        <activity android:name=".MainActivityAdmin" />
+        <activity android:name=".UserLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.apsent.villapp.GalleryActivity" />
+        <activity android:name=".GalleryActivity" />
+        <activity android:name=".GallerySliderActivity"/>
     </application>
 
 </manifest>

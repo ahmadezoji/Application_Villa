@@ -1,4 +1,4 @@
-package com.absent.villapp;
+package com.apsent.villapp;
 
 import org.junit.Test;
 

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
-import com.absent.villapp.R;
+import com.apsent.villapp.R;
 import com.bumptech.glide.Glide;
 
 public class ImageSliderDialog extends  DialogFragment {

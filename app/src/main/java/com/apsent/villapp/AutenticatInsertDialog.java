@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.absent.villapp.R;
+import com.apsent.villapp.R;
 
 public class AutenticatInsertDialog extends DialogFragment {
     private Context context;

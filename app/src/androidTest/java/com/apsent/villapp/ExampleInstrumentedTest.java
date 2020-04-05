@@ -1,4 +1,4 @@
-package com.absent.villapp;
+package com.apsent.villapp;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.absent.villapp", appContext.getPackageName());
+        assertEquals("com.apsent.villapp", appContext.getPackageName());
     }
 }

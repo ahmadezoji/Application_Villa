@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.absent.villapp.R;
+import com.apsent.villapp.R;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;

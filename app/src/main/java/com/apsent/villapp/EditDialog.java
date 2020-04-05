@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import com.absent.villapp.R;
+import com.apsent.villapp.R;
 
 public class EditDialog extends DialogFragment {
     private Context context;
