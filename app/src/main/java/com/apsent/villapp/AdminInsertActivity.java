@@ -132,13 +132,13 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 showFileChooser();
             }
         });
-        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_PICTURE);
-            }
-        });
+//        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(intent, TAKE_PICTURE);
+//            }
+//        });
     }
     private void map_init()
     {
@@ -188,7 +188,7 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     private void cast()
     {
         btnGotoGallery = (Button)findViewById(R.id.BtngoToGallery);
-        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
+//        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
         title=(EditText)(findViewById(R.id.VTitle));
         cost=(EditText)(findViewById(R.id.VCost));
