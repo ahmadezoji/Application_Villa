@@ -1,97 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-
+    android:scrollbars="vertical"
+    android:padding="5mm"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditText
-        android:textAlignment="center"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="title"
-        android:id="@+id/txt_title_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="address"
-        android:id="@+id/txt_address_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="lat"
-        android:id="@+id/txt_lat_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="lon"
-        android:id="@+id/txt_lon_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="cost"
-        android:id="@+id/txt_price_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="room count"
-        android:id="@+id/txt_roomcnt_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="capacity"
-        android:id="@+id/txt_Capacity_editDlg"/>
-    <EditText
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="area"
-        android:id="@+id/txt_area_editDlg"/>
+        android:layout_height="0mm"
+        android:layout_weight="5"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/txt_title_editDlg"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1"
+            android:hint="@string/villa_title"/>
+        <EditText
+            android:id="@+id/txt_address_editDlg"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1"
+            android:hint="@string/villa_address"
+            />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1.5">
+            <EditText
+                android:id="@+id/txt_price_editDlg"
+                android:textAlignment="center"
+                android:layout_width="0mm"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/villa_cost" />
+            <EditText
+                android:id="@+id/txt_price_weekend_editDlg"
+                android:textAlignment="center"
+                android:layout_width="0mm"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/villa_cost_weekend" />
+            <EditText
+                android:id="@+id/txt_price_special_editDlg"
+                android:textAlignment="center"
+                android:layout_width="0mm"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/villa_cost_special" />
 
-<!--    <LinearLayout-->
-<!--        android:textAlignment="center"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal">-->
+        </LinearLayout>
 
+        <EditText
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1"
+            android:hint="room count"
+            android:id="@+id/txt_roomcnt_editDlg"/>
+        <EditText
+            android:id="@+id/txt_Capacity_editDlg"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1"
+            android:hint="@string/villa_capacity"
+           />
+        <EditText
+            android:id="@+id/txt_area_editDlg"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="0mm"
+            android:layout_weight="1"
+            android:hint="@string/villa_area"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0mm"
+        android:layout_weight="4">
 
-<!--        <ImageView-->
-<!--            android:id="@+id/img_villa_editDlg"-->
-<!--            android:layout_width="0mm"-->
-<!--            android:layout_weight="4"-->
-<!--            android:layout_height="30mm"/>-->
+        <fragment
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map_EditVilla"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
 
-<!--        <Button-->
-<!--            android:id="@+id/btn_upload_editDlg"-->
-<!--            android:layout_marginRight="5dp"-->
-<!--            android:background="@color/pressColor"-->
-<!--            android:text="Upload"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_width="0mm"-->
-<!--            android:layout_height="wrap_content"/>-->
-<!--        <Button-->
-<!--            android:id="@+id/btn_camera_editDlg"-->
-<!--            android:background="@color/pressColor"-->
-<!--            android:text="Camera"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_width="0mm"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-
-<!--    </LinearLayout>-->
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0mm"
+        android:layout_weight="0.5"
         android:orientation="horizontal"
-        android:padding="1mm"
         android:background="#51000000"
         >
         <Button
@@ -124,7 +131,6 @@
 
 
     </LinearLayout>
-
 
 
 

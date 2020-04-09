@@ -108,7 +108,7 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
             public void onMapReady(GoogleMap googleMap) {
 
                 mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(33.37222794178551,54.63216595351696), 5.0f));
@@ -125,21 +125,21 @@ public class MainActivityCustomer extends AppCompatActivity implements VillaList
                     @Override
                     public void onCameraChange(CameraPosition pos) {
                         if (pos.zoom != currentZoom){
-                            cameraPosition=pos;
-                            currentZoom = pos.zoom;
-                            currentPos =new LatLng(pos.target.latitude,pos.target.longitude);
-                            getVilla_By_positoin(currentPos,currentZoom);
-                            showLocations(villaList);
+//                            cameraPosition=pos;
+//                            currentZoom = pos.zoom;
+//                            currentPos =new LatLng(pos.target.latitude,pos.target.longitude);
+//                            getVilla_By_positoin(currentPos,currentZoom);
+//                            showLocations(villaList);
                         }
                     }
                 });
                 mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {
-                        CameraPosition Position = mMap.getCameraPosition();
-                        currentPos =new LatLng(Position.target.latitude,Position.target.longitude);
-                        getVilla_By_positoin(currentPos,currentZoom);
-                        showLocations(villaList);
+//                        CameraPosition Position = mMap.getCameraPosition();
+//                        currentPos =new LatLng(Position.target.latitude,Position.target.longitude);
+//                        getVilla_By_positoin(currentPos,currentZoom);
+//                        showLocations(villaList);
                     }
                 });
             }

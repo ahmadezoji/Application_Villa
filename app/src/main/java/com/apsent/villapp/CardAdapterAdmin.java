@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.apsent.villapp.R;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -22,6 +22,16 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
 
     private ArrayList<Villa> dataSet;
     private Context context;
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
+    }
+
+    private Users users;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -84,13 +94,18 @@ public class CardAdapterAdmin extends RecyclerView.Adapter<CardAdapterAdmin.MyVi
         btn_Edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditDialog dialog=new EditDialog();
-                dialog.setContext(context);
-                dialog.setVilla(dataSet.get(listPosition));
-                dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
-                dialog.setVillaListOwner((VillaListOwner) context);
-                FragmentManager fm =((Activity) context).getFragmentManager();
-                dialog.show(fm,"");
+//                EditDialog dialog=new EditDialog();
+//                dialog.setContext(context);
+//                dialog.setVilla(dataSet.get(listPosition));
+//                dialog.setStyle(DialogFragment.STYLE_NO_TITLE,0);
+//                dialog.setVillaListOwner((VillaListOwner) context);
+//                FragmentManager fm =((Activity) context).getFragmentManager();
+//                dialog.show(fm,"");
+
+                Intent intent=new Intent(context, AdminInsertActivity.class);
+                intent.putExtra("user",getUsers());
+                intent.putExtra("villa",dataSet.get(listPosition));
+                context.startActivity(intent);
             }
         });
         btn_Del.setOnClickListener(new View.OnClickListener() {

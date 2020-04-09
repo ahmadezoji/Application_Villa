@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.apsent.villapp.R;
 import java.util.ArrayList;
+import java.util.Locale;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,14 +55,10 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
         uploadServer = new UploadServer();
 
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Utils.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        apIs = retrofit.create(APIs.class);
+//        Configuration config = getResources().getConfiguration();
+//        config.setLocale(new Locale("fa_IR"));
 
-//        setWallpaper();
         filllist();
     }
     @Override
@@ -70,6 +69,7 @@ public class MainActivityAdmin extends AppCompatActivity implements VillaListOwn
 
             recyclerView =  (RecyclerView) findViewById(R.id.my_recycler_view_Admin);
             adapter = new CardAdapterAdmin(villas,MainActivityAdmin.this);
+            adapter.setUsers(CurrentUser);
             recyclerView.setLayoutManager(new LinearLayoutManager(MainActivityAdmin.this,LinearLayoutManager.HORIZONTAL,false));
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);

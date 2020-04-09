@@ -61,12 +61,12 @@ public class CardAdapterCustomer extends RecyclerView.Adapter<CardAdapterCustome
         title.setText(dataSet.get(listPosition).getTitle());
         cost.setText(String.valueOf(dataSet.get(listPosition).getCost()));
 
-//        if (dataSet.get(listPosition).getCover()!=null) {
-//
-//            Glide.with(context)
-//                    .load(dataSet.get(listPosition).getCover())
-//                    .into(imageViewIcon);
-//        }
+        if (dataSet.get(listPosition).getCover()!=null) {
+
+            Glide.with(context)
+                    .load(dataSet.get(listPosition).getCover())
+                    .into(imageViewIcon);
+        }
 
         imageViewIcon.setOnClickListener(new View.OnClickListener() {
             @Override

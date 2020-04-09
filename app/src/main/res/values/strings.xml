@@ -1,5 +1,25 @@
 <resources>
     <string name="app_name">Samtema</string>
 
+    <string name="welcomeToast">Hello
+    </string>
+
     <string name="search_hint">Address</string>
+
+    <string name="villa_title">Title</string>
+
+    <string name="villa_cost">Cost(toman)</string>
+    <string name="villa_cost_weekend">Weekend cost(toman)</string>
+    <string name="villa_cost_special">Special cost(toman)</string>
+
+    <string name="villa_area">Area(meter)</string>
+    <string name="villa_capacity">Capacity</string>
+    <string name="villa_address">Address</string>
+    <string name="villa_roomcnt">Room count</string>
+
+<!--    <string name="BtnText_Edit">Edit</string>-->
+<!--    <string name="BtnText_Add">Add</string>-->
+    <string name="BtnText_Edit">ویرایش</string>
+    <string name="BtnText_Add">ثبت</string>
+
 </resources>

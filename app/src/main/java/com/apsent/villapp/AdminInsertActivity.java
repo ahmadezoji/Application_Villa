@@ -1,12 +1,10 @@
 package com.apsent.villapp;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.apsent.villapp.R;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,18 +38,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class AdminInsertActivity extends AppCompatActivity implements LocationListener {
     public Users CurrentUser;
     private UploadServer uploadServer;
     private Villa currentVilla;
-    private static ViewPager mPager;
     private SupportMapFragment mapFragment;
-    private ArrayList<Bitmap> bitmapList;
-    private SlidingImage_Adapter slidingImage_adapter;
-    private float downX;
 
     public boolean isVilla_register_state() {
         return villa_register_state;
@@ -62,9 +56,10 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
     private boolean villa_register_state;
 
-    private Button btnCapture_Cam;
     private Button btnCapture_Gallery;
     private Button btnGotoGallery;
+    private Button btn_Action;
+
 
     private Bitmap coverBmp = null;
     private Uri coverUri = null
@@ -81,6 +76,8 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
     EditText title;
     EditText cost;
+    EditText cost_weekend;
+    EditText cost_special;
     EditText room_count;
     EditText capacity;
     EditText area;
@@ -96,49 +93,53 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
     private static final int TAKE_PICTURE = 1;
 
     private GoogleMap mMap;
-
-    private APIs apIs;
     LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_insert);
+        try {
 
-        uploadServer = new UploadServer();
-        uploadServer.setContext(this);
-        cast();
+            uploadServer = new UploadServer();
+            villaController = new VillaController();
+            uploadServer.setContext(this);
+            cast();
+            map_init();
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        CurrentUser = (Users) bundle.get("user");
-
-        villaController = new VillaController();
-
-        map_init();
-
-
-        btnGotoGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminInsertActivity.this,GalleryActivity.class);
-                intent.putExtra("villa",currentVilla);
-                startActivity(intent);
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            CurrentUser = (Users) bundle.get("user");
+            if(CurrentUser == null) Toast.makeText(this, "با گدوم کاربر اومدی داخل ؟", Toast.LENGTH_SHORT).show();
+            currentVilla = (Villa) bundle.get("villa");
+            if(currentVilla!=null)
+            {
+                InsertControllers(currentVilla);
             }
-        });
-        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFileChooser();
+            else {
+                btn_Action.setText(getResources().getString(R.string.BtnText_Add));
             }
-        });
-//        btnCapture_Cam.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(intent, TAKE_PICTURE);
-//            }
-//        });
+
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private void InsertControllers(Villa villa)
+    {
+        btn_Action.setText(getResources().getString(R.string.BtnText_Edit));
+        title.setText(villa.getTitle());
+        cost.setText(String.valueOf(villa.getCost()));
+        cost_weekend.setText(String.valueOf(villa.getCost_weekend()));
+        cost_special.setText(String.valueOf(villa.getCost_special()));
+        room_count.setText(String.valueOf(villa.getRoomCount()));
+        capacity.setText(String.valueOf(villa.getCapacity()));
+        area.setText(String.valueOf(villa.getArea()));
+        address.setText(villa.getAddress());
+        Glide.with(this).load(villa.getCover()).into(cover);
+
+
     }
     private void map_init()
     {
@@ -152,6 +153,16 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 mMap = googleMap;
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
+
+                if (currentVilla!=null)
+                {
+                    mMap.clear();
+                    villa_latLng = new LatLng(currentVilla.getLat(),currentVilla.getLon());
+                    mMap.addMarker(new MarkerOptions().position(villa_latLng));
+                    mMap.setMyLocationEnabled(true);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(villa_latLng));
+                }
+
                 mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                     @Override
                     public boolean onMyLocationButtonClick() {
@@ -173,11 +184,12 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
             }
         });
-
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},123);
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+
     }
     public void Onclick_addpic(View view)
     {
@@ -187,11 +199,13 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
 
     private void cast()
     {
+        btn_Action = (Button) findViewById(R.id.BtnAction);
         btnGotoGallery = (Button)findViewById(R.id.BtngoToGallery);
-//        btnCapture_Cam =(Button)findViewById(R.id.btnTakePicture);
         btnCapture_Gallery =(Button)findViewById(R.id.m_uploadBtn);
         title=(EditText)(findViewById(R.id.VTitle));
         cost=(EditText)(findViewById(R.id.VCost));
+        cost_weekend=(EditText)findViewById(R.id.VCost_weeken);
+        cost_special=(EditText)findViewById(R.id.VCost_special);
         room_count=(EditText)(findViewById(R.id.VRoomCnt));
         capacity=(EditText)(findViewById(R.id.VCapacity));
         area=(EditText)(findViewById(R.id.VArea));
@@ -202,22 +216,67 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
         mapFragment= (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_InsertVilla);
 
-    }
-    public void Onclick_BtnAdd(View view)
-    {
-        addVilla();
-    }
-    private void updateVilla()
-    {
-        try
-        {
-            villaController.EditVilla(currentVilla);
-            Toast.makeText(this, "upload complete !", Toast.LENGTH_SHORT).show();
 
-        }catch (Exception e)
+
+
+
+        btnGotoGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminInsertActivity.this,GalleryActivity.class);
+                intent.putExtra("villa",currentVilla);
+                startActivity(intent);
+            }
+        });
+        btnCapture_Gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFileChooser();
+            }
+        });
+        btn_Action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btn_Action.getText().toString().
+                        contains(getResources().getString(R.string.BtnText_Add)))
+                {
+                    addVilla();
+                }
+                else
+                {
+                    editVilla();
+                }
+
+            }
+        });
+
+    }
+    private void editVilla()
+    {
+        currentVilla.setTitle(title.getText().toString());
+        currentVilla.setAddress(address.getText().toString());
+        currentVilla.setLat((float) villa_latLng.latitude);
+        currentVilla.setLon((float) villa_latLng.longitude);
+        currentVilla.setCost(Integer.valueOf(cost.getText().toString()));
+        currentVilla.setCost_weekend(Integer.valueOf(cost_weekend.getText().toString()));
+        currentVilla.setCost_special(Integer.valueOf(cost_special.getText().toString()));
+        currentVilla.setRoomCount(Integer.valueOf(room_count.getText().toString()));
+        currentVilla.setCapacity(Integer.valueOf(capacity.getText().toString()));
+        currentVilla.setArea(Integer.valueOf(area.getText().toString()));
+        if (coverUri != null)
         {
-            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+            String upload_url = null;
+            upload_url = UploadCoverToServer(coverUri);
+            currentVilla.setCover(upload_url);
         }
+        currentVilla.setGalleryid(CurrentUser.getId());
+        currentVilla.setAdminUserId(CurrentUser.getId());
+
+        if(villaController.EditVilla(currentVilla))
+        {
+            Toast.makeText(this, "ویلا ویرایش شد", Toast.LENGTH_SHORT).show();
+        }
+
     }
     private void addVilla()
     {
@@ -232,6 +291,8 @@ public class AdminInsertActivity extends AppCompatActivity implements LocationLi
                 currentVilla.setLat((float) villa_latLng.latitude);
                 currentVilla.setLon((float) villa_latLng.longitude);
                 currentVilla.setCost(Integer.valueOf(cost.getText().toString()));
+                currentVilla.setCost_weekend(Integer.valueOf(cost_weekend.getText().toString()));
+                currentVilla.setCost_special(Integer.valueOf(cost_special.getText().toString()));
                 currentVilla.setRoomCount(Integer.valueOf(room_count.getText().toString()));
                 currentVilla.setCapacity(Integer.valueOf(capacity.getText().toString()));
                 currentVilla.setArea(Integer.valueOf(area.getText().toString()));

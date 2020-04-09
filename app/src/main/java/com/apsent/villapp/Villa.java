@@ -25,6 +25,10 @@ public class Villa implements Serializable {
     @DatabaseField
     private int cost;
     @DatabaseField
+    private int cost_weekend;
+    @DatabaseField
+    private int cost_special;
+    @DatabaseField
     private int roomcnt;
     @DatabaseField
     private int capacity;
@@ -135,5 +139,21 @@ public class Villa implements Serializable {
 
     public int getVillaId() {
         return id;
+    }
+
+    public int getCost_weekend() {
+        return cost_weekend;
+    }
+
+    public void setCost_weekend(int cost_weekend) {
+        this.cost_weekend = cost_weekend;
+    }
+
+    public int getCost_special() {
+        return cost_special;
+    }
+
+    public void setCost_special(int cost_special) {
+        this.cost_special = cost_special;
     }
 }
